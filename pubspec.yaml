@@ -1,0 +1,55 @@
+name: ups_monitor_app
+description: UPS WiFi智能监控系统 - 移动APP
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # UI组件
+  cupertino_icons: ^1.0.6
+  google_fonts: ^6.1.0
+  flutter_svg: ^2.0.9
+  shimmer: ^3.0.0
+  
+  # 网络通信
+  http: ^1.1.0
+  web_socket_channel: ^2.4.0
+  
+  # 本地存储
+  shared_preferences: ^2.2.2
+  sqflite: ^2.3.0
+  path_provider: ^2.1.1
+  
+  # 实用工具
+  intl: ^0.18.1
+  uuid: ^4.2.1
+  equatable: ^2.0.5
+  
+  # 状态管理
+  provider: ^6.1.1
+  
+  # 权限和通知
+  permission_handler: ^11.1.0
+  flutter_local_notifications: ^17.0.0
+  
+  # 图表
+  fl_chart: ^0.66.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+  integration_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  
+  assets:
+    - assets/images/
+    - assets/icons/
