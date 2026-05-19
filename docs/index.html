@@ -2,36 +2,86 @@
 <html>
 <head>
   <base href="/ups-monitor-app/">
+
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="UPS监控管理系统">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="description" content="Marsriva IoT - 智能设备管理">
+
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="UPS监控">
+  <meta name="apple-mobile-web-app-title" content="ups_monitor_app">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
   <link rel="icon" type="image/png" href="favicon.png"/>
-  <title>UPS监控管理系统</title>
+
+  <title>Marsriva IoT</title>
+  <link rel="manifest" href="manifest.json">
+
   <style>
-    body { margin: 0; padding: 0; background: #0a0e27; }
-    #loading {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: #0a0e27; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; z-index: 9999;
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #F5F7FA;
     }
-    .spinner {
-      width: 50px; height: 50px; border: 3px solid rgba(0,212,255,0.3);
-      border-top-color: #00d4ff; border-radius: 50%;
+    .loading {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #E8E8E8;
+      border-top-color: #4A90D9;
+      border-radius: 50%;
       animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loading-text { color: #00d4ff; margin-top: 20px; font-family: sans-serif; }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
-  <div id="loading">
-    <div class="spinner"></div>
-    <div class="loading-text">正在加载应用...</div>
+  <div id="loading" class="loading">
+    <div class="loading-spinner"></div>
+    <div>加载中...</div>
   </div>
-  <script src="flutter_bootstrap.js?v=9"></script>
+
+  <script>
+    // Override build config before flutter_bootstrap.js loads
+    Object.defineProperty(window, '_flutter', {
+      configurable: true,
+      get: function() {
+        return this.__flutter || {};
+      },
+      set: function(value) {
+        this.__flutter = value;
+        if (value && value.buildConfig) {
+          // Override with HTML renderer support
+          value.buildConfig = {
+            "engineRevision": "42d3d75a56efe1a2e9902f52dc8006099c45d937",
+            "builds": [
+              {
+                "compileTarget": "dart2js",
+                "renderer": "canvaskit",
+                "mainJsPath": "main.dart.js"
+              },
+              {
+                "compileTarget": "dart2js",
+                "renderer": "html",
+                "mainJsPath": "main.dart.js"
+              }
+            ]
+          };
+        }
+      }
+    });
+  </script>
+
+  <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
