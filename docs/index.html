@@ -51,6 +51,37 @@
     <div>加载中...</div>
   </div>
 
-  <script src="flutter_bootstrap.js?v=14"></script>
+  <script>
+    // Override build config before flutter_bootstrap.js loads
+    Object.defineProperty(window, '_flutter', {
+      configurable: true,
+      get: function() {
+        return this.__flutter || {};
+      },
+      set: function(value) {
+        this.__flutter = value;
+        if (value && value.buildConfig) {
+          // Override with HTML renderer support
+          value.buildConfig = {
+            "engineRevision": "42d3d75a56efe1a2e9902f52dc8006099c45d937",
+            "builds": [
+              {
+                "compileTarget": "dart2js",
+                "renderer": "canvaskit",
+                "mainJsPath": "main.dart.js"
+              },
+              {
+                "compileTarget": "dart2js",
+                "renderer": "html",
+                "mainJsPath": "main.dart.js"
+              }
+            ]
+          };
+        }
+      }
+    });
+  </script>
+
+  <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

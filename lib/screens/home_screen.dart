@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ups_monitor_app/config/theme.dart';
-import 'package:ups_monitor_app/screens/monitor_screen.dart';
+import 'package:ups_monitor_app/models/device_type.dart';
+import 'package:ups_monitor_app/models/smart_device.dart';
+import 'package:ups_monitor_app/screens/device_list_screen.dart';
 import 'package:ups_monitor_app/services/locale_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,11 +15,61 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
-  
-  final List<Map<String, dynamic>> _devices = [
-    {'name': 'UPS Device 1', 'ip': '192.168.1.100', 'status': 'Online', 'battery': 85, 'load': 45},
-    {'name': 'UPS Device 2', 'ip': '192.168.1.101', 'status': 'Online', 'battery': 92, 'load': 30},
-    {'name': 'UPS Device 3', 'ip': '192.168.1.102', 'status': 'Offline', 'battery': 0, 'load': 0},
+
+  // 模拟用户绑定的设备数据
+  final List<SmartDevice> _userDevices = [
+    SmartDevice(
+      id: 'ups_001',
+      name: '办公室UPS',
+      type: DeviceType.ups,
+      serialNumber: 'UPS2024001',
+      model: 'Marsriva UPS 3K',
+      ratedPower: '3kVA',
+      batteryCapacity: '72V 20Ah',
+      isOnline: true,
+      mode: DeviceMode.online,
+      lastSeen: DateTime.now(),
+      parameters: {'battery': 86.5, 'load': 45.8, 'output_voltage': 225.7, 'output_current': 5.2, 'input_voltage': 216.4, 'output_power': 1160.1},
+    ),
+    SmartDevice(
+      id: 'ups_002',
+      name: '机房UPS',
+      type: DeviceType.ups,
+      serialNumber: 'UPS2024002',
+      model: 'Marsriva UPS 5K',
+      ratedPower: '5kVA',
+      batteryCapacity: '96V 30Ah',
+      isOnline: true,
+      mode: DeviceMode.charging,
+      lastSeen: DateTime.now(),
+      parameters: {'battery': 92.0, 'load': 30.0, 'output_voltage': 220.0, 'output_current': 3.8, 'input_voltage': 218.0, 'output_power': 836.0},
+    ),
+    SmartDevice(
+      id: 'bms_001',
+      name: '储能电池组A',
+      type: DeviceType.bms,
+      serialNumber: 'BMS2024001',
+      model: 'Marsriva BMS 100',
+      ratedPower: '5kW',
+      batteryCapacity: '48V 200Ah',
+      isOnline: true,
+      mode: DeviceMode.online,
+      lastSeen: DateTime.now(),
+      parameters: {'voltage': 48.2, 'current': 25.5, 'soc': 78.0, 'temperature': 32.0},
+    ),
+    SmartDevice(
+      id: 'solar_001',
+      name: '屋顶光伏',
+      type: DeviceType.solar,
+      serialNumber: 'SOL2024001',
+      model: 'Marsriva Solar 10K',
+      ratedPower: '10kW',
+      batteryCapacity: 'N/A',
+      isOnline: false,
+      mode: DeviceMode.offline,
+      lastSeen: DateTime.now().subtract(const Duration(hours: 2)),
+      parameters: {'generation': 45.2, 'today_generation': 28.5, 'efficiency': 18.2},
+    ),
   ];
 
   @override
@@ -30,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
           body: IndexedStack(
             index: _currentIndex,
             children: [
-              _buildDeviceListPage(localeService),
+              _buildCategoryPage(localeService),
               _buildEventLogPage(localeService),
               _buildSettingsPage(localeService),
             ],
@@ -46,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildNavItem(0, Icons.dashboard, t('Dashboard')),
+                    _buildNavItem(0, Icons.home, t('Home')),
                     _buildNavItem(1, Icons.history, t('Events')),
                     _buildNavItem(2, Icons.settings, t('Settings')),
                   ],
@@ -54,9 +106,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          floatingActionButton: _currentIndex == 0
-              ? FloatingActionButton(onPressed: () => _showAddDeviceDialog(context, localeService), backgroundColor: AppTheme.primaryColor, child: const Icon(Icons.add))
-              : null,
         );
       },
     );
@@ -85,8 +134,19 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildDeviceListPage(LocaleService localeService) {
+  // 首页 - 设备分类
+  Widget _buildCategoryPage(LocaleService localeService) {
     final t = localeService.t;
+    
+    // 按设备类型分组统计
+    final Map<DeviceType, List<SmartDevice>> groupedDevices = {};
+    for (final device in _userDevices) {
+      groupedDevices.putIfAbsent(device.type, () => []).add(device);
+    }
+
+    // 在线设备数
+    final onlineCount = _userDevices.where((d) => d.isOnline).length;
+
     return CustomScrollView(
       slivers: [
         SliverAppBar(
@@ -132,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               decoration: BoxDecoration(color: AppTheme.onlineColor, shape: BoxShape.circle, boxShadow: [BoxShadow(color: AppTheme.onlineColor.withOpacity(0.5), blurRadius: 4)]),
                             ),
                             const SizedBox(width: 8),
-                            Text('${_devices.where((d) => d['status'] == 'Online').length} ${t('Device(s) Online')}', style: const TextStyle(fontSize: 12, color: Colors.white)),
+                            Text('$onlineCount/${_userDevices.length} ${t('Device(s) Online')}', style: const TextStyle(fontSize: 12, color: Colors.white)),
                           ],
                         ),
                       ),
@@ -148,9 +208,9 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
             child: Row(
               children: [
-                Text(t('My Devices'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                Text(t('Device Categories'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
                 const Spacer(),
-                Text('${_devices.length} ${t('devices')}', style: const TextStyle(fontSize: 12, color: Colors.white54)),
+                Text('${groupedDevices.length} ${t('categories')}', style: const TextStyle(fontSize: 12, color: Colors.white54)),
               ],
             ),
           ),
@@ -160,10 +220,15 @@ class _HomeScreenState extends State<HomeScreen> {
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
-                final device = _devices[index];
-                return Padding(padding: const EdgeInsets.only(bottom: 12), child: _buildDeviceCard(device, localeService));
+                final type = groupedDevices.keys.elementAt(index);
+                final devices = groupedDevices[type]!;
+                final onlineDevices = devices.where((d) => d.isOnline).length;
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: _buildCategoryCard(type, devices.length, onlineDevices, localeService),
+                );
               },
-              childCount: _devices.length,
+              childCount: groupedDevices.length,
             ),
           ),
         ),
@@ -172,87 +237,70 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildDeviceCard(Map<String, dynamic> device, LocaleService localeService) {
-    final t = localeService.t;
-    final isOnline = device['status'] == 'Online';
-    final statusColor = isOnline ? AppTheme.onlineColor : AppTheme.offlineColor;
-    
+  Widget _buildCategoryCard(DeviceType type, int totalCount, int onlineCount, LocaleService localeService) {
     return InkWell(
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MonitorScreen(deviceName: device['name'], ipAddress: device['ip']))),
+      onTap: () {
+        // 进入该分类的设备列表页
+        final devices = _userDevices.where((d) => d.type == type).toList();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DeviceListScreen(
+              categoryName: type.displayName,
+              devices: devices,
+            ),
+          ),
+        );
+      },
       borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: statusColor.withOpacity(0.3), width: 1),
-          boxShadow: [BoxShadow(color: statusColor.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
+          border: Border.all(color: type.color.withOpacity(0.3), width: 1),
+          boxShadow: [BoxShadow(color: type.color.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
         ),
-        child: Column(
+        child: Row(
           children: [
-            Row(
+            Container(
+              width: 56, height: 56,
+              decoration: BoxDecoration(color: type.color.withOpacity(0.15), borderRadius: BorderRadius.circular(14)),
+              child: Icon(type.icon, color: type.color, size: 28),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(type.displayName, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                  const SizedBox(height: 4),
+                  Text('$totalCount ${localeService.t('devices')}', style: const TextStyle(fontSize: 12, color: Colors.white54)),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Container(
-                  width: 48, height: 48,
-                  decoration: BoxDecoration(color: statusColor.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
-                  child: Icon(Icons.electric_bolt, color: statusColor, size: 24),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(color: AppTheme.onlineColor.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Row(
-                        children: [
-                          Text(device['name'], style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                            decoration: BoxDecoration(color: statusColor.withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
-                            child: Text(t(device['status']), style: TextStyle(fontSize: 10, color: statusColor, fontWeight: FontWeight.w600)),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(device['ip'], style: const TextStyle(fontSize: 12, color: Colors.white54)),
+                      Container(width: 6, height: 6, decoration: const BoxDecoration(color: AppTheme.onlineColor, shape: BoxShape.circle)),
+                      const SizedBox(width: 4),
+                      Text('$onlineCount', style: const TextStyle(fontSize: 12, color: AppTheme.onlineColor, fontWeight: FontWeight.w600)),
                     ],
                   ),
                 ),
+                const SizedBox(height: 8),
                 const Icon(Icons.chevron_right, color: Colors.white38),
               ],
             ),
-            if (isOnline) ...[
-              const SizedBox(height: 16),
-              const Divider(color: Colors.white12, height: 1),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(child: _buildMiniStat(t('Battery'), '${device['battery']}%', Icons.battery_full, AppTheme.successColor)),
-                  Container(width: 1, height: 30, color: Colors.white12),
-                  Expanded(child: _buildMiniStat(t('Load'), '${device['load']}%', Icons.electric_bolt, AppTheme.orangeAccent)),
-                ],
-              ),
-            ],
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildMiniStat(String label, String value, IconData icon, Color color) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(icon, color: color, size: 18),
-        const SizedBox(width: 6),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(value, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color)),
-            Text(label, style: const TextStyle(fontSize: 10, color: Colors.white54)),
-          ],
-        ),
-      ],
     );
   }
 
@@ -376,36 +424,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ListTile(title: const Text('中文', style: TextStyle(color: Colors.white)), onTap: () => Navigator.pop(dialogContext)),
           ],
         ),
-      ),
-    );
-  }
-
-  void _showAddDeviceDialog(BuildContext context, LocaleService localeService) {
-    final nameController = TextEditingController();
-    final ipController = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        backgroundColor: AppTheme.surfaceColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(localeService.t('Add Device'), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: nameController, style: const TextStyle(color: Colors.white), decoration: const InputDecoration(labelText: 'Device Name', labelStyle: TextStyle(color: Colors.white54))),
-            const SizedBox(height: 16),
-            TextField(controller: ipController, style: const TextStyle(color: Colors.white), decoration: const InputDecoration(labelText: 'IP Address', labelStyle: TextStyle(color: Colors.white54))),
-          ],
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext), child: Text(localeService.t('Cancel'))),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(dialogContext);
-            },
-            child: Text(localeService.t('Add')),
-          ),
-        ],
       ),
     );
   }
