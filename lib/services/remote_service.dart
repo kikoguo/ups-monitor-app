@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../models/smart_device.dart';
 import '../models/device_type.dart';
@@ -9,15 +10,21 @@ import '../models/device_type.dart';
 class RemoteService {
   final http.Client _client;
   final String _baseUrl;
+  final bool _isDemoMode;
 
   RemoteService({
     http.Client? client,
     String baseUrl = 'https://api.example.com',
+    bool? isDemoMode,
   })  : _client = client ?? http.Client(),
-        _baseUrl = baseUrl;
+        _baseUrl = baseUrl,
+        _isDemoMode = isDemoMode ?? kIsWeb;
 
   /// 获取用户所有设备列表
   Future<List<SmartDevice>> getDevices(String userToken) async {
+    if (_isDemoMode) {
+      return _getDemoDevices();
+    }
     try {
       final response = await _client
           .get(
@@ -44,6 +51,12 @@ class RemoteService {
 
   /// 获取单个设备详情
   Future<SmartDevice?> getDeviceDetail(String deviceId, String userToken) async {
+    if (_isDemoMode) {
+      return _getDemoDevices().firstWhere(
+        (d) => d.id == deviceId,
+        orElse: () => _getDemoDevices().first,
+      );
+    }
     try {
       final response = await _client
           .get(
@@ -73,6 +86,9 @@ class RemoteService {
     String deviceId,
     String userToken,
   ) async {
+    if (_isDemoMode) {
+      return _generateDemoRealtimeData(deviceId);
+    }
     try {
       final response = await _client
           .get(
@@ -101,6 +117,9 @@ class RemoteService {
     Map<String, dynamic> params,
     String userToken,
   ) async {
+    if (_isDemoMode) {
+      return true;
+    }
     try {
       final response = await _client
           .post(
@@ -132,6 +151,9 @@ class RemoteService {
     DateTime endTime,
     String userToken,
   ) async {
+    if (_isDemoMode) {
+      return _generateDemoHistoryData(parameter, startTime, endTime);
+    }
     try {
       final response = await _client
           .get(

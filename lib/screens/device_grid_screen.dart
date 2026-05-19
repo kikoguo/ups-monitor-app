@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../models/smart_device.dart';
 import '../models/device_type.dart';
 import '../services/remote_service.dart';
@@ -28,10 +27,12 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
   Future<void> _loadDevices() async {
     setState(() => _isLoading = true);
     final devices = await _remoteService.getDevices('demo_token');
-    setState(() {
-      _devices = devices;
-      _isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        _devices = devices;
+        _isLoading = false;
+      });
+    }
   }
 
   List<SmartDevice> get _filteredDevices {
@@ -48,16 +49,11 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // 顶部搜索栏
             _buildSearchBar(),
-            // 设备网格
             Expanded(
               child: _isLoading
                   ? const Center(child: CircularProgressIndicator())
-                  : RefreshIndicator(
-                      onRefresh: _loadDevices,
-                      child: _buildDeviceGrid(),
-                    ),
+                  : _buildDeviceGrid(),
             ),
           ],
         ),
@@ -88,18 +84,12 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
               ),
               child: TextField(
                 onChanged: (value) => setState(() => _searchQuery = value),
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: '设备名称',
-                  hintStyle: GoogleFonts.notoSans(
-                    color: Colors.grey,
-                    fontSize: 14,
-                  ),
-                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
+                  prefixIcon: Icon(Icons.search, color: Colors.grey),
                   border: InputBorder.none,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 14,
-                  ),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 ),
               ),
             ),
@@ -130,12 +120,9 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
           children: [
             Icon(Icons.devices_other, size: 64, color: Colors.grey[300]),
             const SizedBox(height: 16),
-            Text(
+            const Text(
               '暂无设备',
-              style: GoogleFonts.notoSans(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
           ],
         ),
@@ -187,7 +174,6 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 设备图标
                   Container(
                     width: 56,
                     height: 56,
@@ -202,33 +188,27 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
                     ),
                   ),
                   const Spacer(),
-                  // 设备名称
                   Text(
                     device.name,
-                    style: GoogleFonts.notoSans(
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: const Color(0xFF1A1A2E),
+                      color: Color(0xFF1A1A2E),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
-                  // 设备类型
                   Text(
                     device.type.displayName,
-                    style: GoogleFonts.notoSans(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   ),
                   const SizedBox(height: 8),
-                  // 主要数值
                   Row(
                     children: [
                       Text(
                         device.mainValue,
-                        style: GoogleFonts.notoSans(
+                        style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                           color: device.type.color,
@@ -239,9 +219,7 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
                         width: 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: device.isOnline
-                              ? const Color(0xFF52C41A)
-                              : Colors.grey,
+                          color: device.isOnline ? const Color(0xFF52C41A) : Colors.grey,
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -250,35 +228,6 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
                 ],
               ),
             ),
-            // 开关按钮（仅智能开关/插座显示）
-            if (device.type == DeviceType.smartSwitch ||
-                device.type == DeviceType.smartSocket)
-              Positioned(
-                top: 12,
-                right: 12,
-                child: GestureDetector(
-                  onTap: () {
-                    // TODO: 切换开关状态
-                  },
-                  child: Container(
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: device.parameters['switch_state'] == true
-                          ? const Color(0xFF4A90D9)
-                          : Colors.grey[200],
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.power_settings_new,
-                      color: device.parameters['switch_state'] == true
-                          ? Colors.white
-                          : Colors.grey,
-                      size: 18,
-                    ),
-                  ),
-                ),
-              ),
           ],
         ),
       ),
@@ -307,14 +256,11 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(20),
+            const Padding(
+              padding: EdgeInsets.all(20),
               child: Text(
                 '添加设备',
-                style: GoogleFonts.notoSans(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
             Expanded(
@@ -330,17 +276,12 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
                 itemBuilder: (context, index) {
                   final type = DeviceType.values[index];
                   return GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                      _showDeviceConfigDialog(type);
-                    },
+                    onTap: () => Navigator.pop(context),
                     child: Container(
                       decoration: BoxDecoration(
                         color: type.color.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: type.color.withOpacity(0.3),
-                        ),
+                        border: Border.all(color: type.color.withOpacity(0.3)),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -349,10 +290,7 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
                           const SizedBox(height: 8),
                           Text(
                             type.displayName,
-                            style: GoogleFonts.notoSans(
-                              fontSize: 12,
-                              color: const Color(0xFF1A1A2E),
-                            ),
+                            style: const TextStyle(fontSize: 12, color: Color(0xFF1A1A2E)),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -364,27 +302,6 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  void _showDeviceConfigDialog(DeviceType type) {
-    // TODO: 实现设备配置对话框
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('添加${type.displayName}'),
-        content: const Text('请输入设备信息'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('取消'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('确定'),
-          ),
-        ],
       ),
     );
   }

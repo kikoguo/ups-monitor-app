@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:ups_monitor_app/config/theme.dart';
 
 class MarsrivaLogo extends StatelessWidget {
@@ -25,28 +24,17 @@ class MarsrivaLogo extends StatelessWidget {
           decoration: BoxDecoration(
             gradient: AppTheme.brandGradient,
             borderRadius: BorderRadius.circular(size / 5),
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.primaryColor.withOpacity(0.4),
-                blurRadius: 15,
-                offset: const Offset(0, 5),
-              ),
-            ],
+            boxShadow: [BoxShadow(color: AppTheme.primaryColor.withOpacity(0.4), blurRadius: 15, offset: const Offset(0, 5))],
           ),
           child: Center(
-            child: Icon(
-              Icons.bolt,  // 闪电图标
-              size: size * 0.6,
-              color: Colors.white,
-            ),
+            child: Icon(Icons.bolt, size: size * 0.6, color: Colors.white),
           ),
         ),
         if (showText) ...[
           const SizedBox(height: 8),
-          // 使用Google Fonts确保文字正确显示
           Text(
             'MARSRIVA',
-            style: GoogleFonts.orbitron(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: AppTheme.primaryLightColor,
@@ -58,7 +46,7 @@ class MarsrivaLogo extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             'Keep Life Power On',
-            style: GoogleFonts.rajdhani(
+            style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w600,
               color: Colors.white70,
@@ -78,22 +66,14 @@ class MarsrivaSplash extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: AppTheme.深空Gradient,
-        ),
+        decoration: BoxDecoration(gradient: AppTheme.deepSpaceGradient),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const MarsrivaLogo(size: 100, showText: true, showTagline: true),
               const SizedBox(height: 24),
-              Text(
-                'UPS 智能监控系统',
-                style: GoogleFonts.notoSans(
-                  fontSize: 16,
-                  color: Colors.white70,
-                ),
-              ),
+              const Text('UPS 智能监控系统', style: TextStyle(fontSize: 16, color: Colors.white70)),
               const SizedBox(height: 40),
               SizedBox(
                 width: 200,
@@ -110,7 +90,6 @@ class MarsrivaSplash extends StatelessWidget {
   }
 }
 
-// 酷炫的发光按钮效果
 class GlowButton extends StatelessWidget {
   final String text;
   final IconData icon;
@@ -130,13 +109,7 @@ class GlowButton extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.4),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: color.withOpacity(0.4), blurRadius: 12, offset: const Offset(0, 4))],
       ),
       child: ElevatedButton(
         onPressed: onPressed,
@@ -144,16 +117,14 @@ class GlowButton extends StatelessWidget {
           backgroundColor: color,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon, size: 20),
             const SizedBox(width: 8),
-            Text(text, style: GoogleFonts.notoSans(fontWeight: FontWeight.w600)),
+            Text(text, style: const TextStyle(fontWeight: FontWeight.w600)),
           ],
         ),
       ),
@@ -161,7 +132,6 @@ class GlowButton extends StatelessWidget {
   }
 }
 
-// 状态卡片组件（带发光效果）
 class StatusCard extends StatelessWidget {
   final String title;
   final String value;
@@ -184,34 +154,15 @@ class StatusCard extends StatelessWidget {
         color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: color.withOpacity(0.3), width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: color.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: color.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         children: [
           Icon(icon, color: color, size: 28),
           const SizedBox(height: 8),
-          Text(
-            value,
-            style: GoogleFonts.orbitron(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
+          Text(value, style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color)),
           const SizedBox(height: 4),
-          Text(
-            title,
-            style: GoogleFonts.notoSans(
-              fontSize: 12,
-              color: AppTheme.textSecondary,
-            ),
-          ),
+          Text(title, style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
         ],
       ),
     );
