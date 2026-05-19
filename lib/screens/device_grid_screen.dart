@@ -239,8 +239,8 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.7,
+      builder: (ctx) => Container(
+        height: MediaQuery.of(ctx).size.height * 0.7,
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
@@ -259,7 +259,7 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
             const Padding(
               padding: EdgeInsets.all(20),
               child: Text(
-                '添加设备',
+                '选择设备类型',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
@@ -276,7 +276,10 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
                 itemBuilder: (context, index) {
                   final type = DeviceType.values[index];
                   return GestureDetector(
-                    onTap: () => Navigator.pop(context),
+                    onTap: () {
+                      Navigator.pop(context);
+                      _showIpInputDialog(type);
+                    },
                     child: Container(
                       decoration: BoxDecoration(
                         color: type.color.withOpacity(0.1),
@@ -302,6 +305,81 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _showIpInputDialog(DeviceType type) {
+    final ipController = TextEditingController();
+    final nameController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('添加${type.displayName}'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                labelText: '设备名称',
+                hintText: '例如：我的UPS',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: ipController,
+              decoration: const InputDecoration(
+                labelText: '设备IP',
+                hintText: '例如：192.168.1.100',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('取消'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final ip = ipController.text.trim();
+              final name = nameController.text.trim();
+
+              if (ip.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('请输入设备IP')),
+                );
+                return;
+              }
+
+              Navigator.pop(ctx);
+
+              final newDevice = SmartDevice(
+                id: 'device_${DateTime.now().millisecondsSinceEpoch}',
+                name: name.isEmpty ? type.displayName : name,
+                type: type,
+                localIp: ip,
+                isOnline: true,
+                lastSeen: DateTime.now(),
+              );
+
+              setState(() {
+                _devices.add(newDevice);
+              });
+
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('${newDevice.name} 添加成功')),
+                );
+              }
+            },
+            child: const Text('添加'),
+          ),
+        ],
       ),
     );
   }
