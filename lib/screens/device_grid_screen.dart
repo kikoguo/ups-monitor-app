@@ -45,7 +45,7 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -66,13 +66,7 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
       ),
       child: Row(
         children: [
@@ -123,6 +117,11 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
             const Text(
               '暂无设备',
               style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              '点击右上角 + 添加设备',
+              style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
           ],
         ),

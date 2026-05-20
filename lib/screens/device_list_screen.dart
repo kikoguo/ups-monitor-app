@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../config/theme.dart';
 import '../models/smart_device.dart';
 import 'device_detail_screen.dart';
+import 'device_settings_screen.dart';
 
 class DeviceListScreen extends StatefulWidget {
   final String categoryName;
@@ -31,24 +32,20 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.surfaceColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('重命名设备', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text('重命名设备', style: TextStyle(fontWeight: FontWeight.bold)),
         content: TextField(
           controller: controller,
-          style: const TextStyle(color: Colors.white),
           decoration: const InputDecoration(
             labelText: '设备名称',
-            labelStyle: TextStyle(color: Colors.white54),
-            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)),
-            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.primaryColor)),
+            border: OutlineInputBorder(),
           ),
           autofocus: true,
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('取消', style: TextStyle(color: Colors.white70)),
+            child: const Text('取消'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -70,7 +67,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
   void _showDeviceOptions(int index) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.surfaceColor,
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) => SafeArea(
         child: Column(
@@ -79,20 +76,28 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
             Container(
               margin: const EdgeInsets.only(top: 8),
               width: 40, height: 4,
-              decoration: BoxDecoration(color: Colors.white24, borderRadius: BorderRadius.circular(2)),
+              decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)),
             ),
             const SizedBox(height: 16),
             ListTile(
               leading: const Icon(Icons.edit, color: AppTheme.primaryColor),
-              title: const Text('重命名', style: TextStyle(color: Colors.white)),
+              title: const Text('重命名'),
               onTap: () {
                 Navigator.pop(context);
                 _renameDevice(index);
               },
             ),
             ListTile(
-              leading: const Icon(Icons.info_outline, color: Colors.white70),
-              title: const Text('设备信息', style: TextStyle(color: Colors.white)),
+              leading: const Icon(Icons.settings, color: Colors.grey),
+              title: const Text('设备设置'),
+              onTap: () {
+                Navigator.pop(context);
+                _showDeviceSettings(index);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.info_outline, color: Colors.grey),
+              title: const Text('设备信息'),
               onTap: () {
                 Navigator.pop(context);
                 _showDeviceInfo(index);
@@ -113,14 +118,23 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
     );
   }
 
+  void _showDeviceSettings(int index) {
+    final device = _devices[index];
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DeviceSettingsScreen(device: device),
+      ),
+    );
+  }
+
   void _showDeviceInfo(int index) {
     final device = _devices[index];
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.surfaceColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(device.name, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: Text(device.name, style: const TextStyle(fontWeight: FontWeight.bold)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,7 +149,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('关闭', style: TextStyle(color: Colors.white70)),
+            child: const Text('关闭'),
           ),
         ],
       ),
@@ -147,8 +161,8 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
-          Text('$label: ', style: const TextStyle(color: Colors.white54, fontSize: 14)),
-          Text(value, style: const TextStyle(color: Colors.white, fontSize: 14)),
+          Text('$label: ', style: const TextStyle(color: Colors.grey, fontSize: 14)),
+          Text(value, style: const TextStyle(fontSize: 14)),
         ],
       ),
     );
@@ -158,14 +172,13 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.surfaceColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('确认删除', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-        content: Text('确定要删除设备 "${_devices[index].name}" 吗？', style: const TextStyle(color: Colors.white70)),
+        title: const Text('确认删除', style: TextStyle(fontWeight: FontWeight.bold)),
+        content: Text('确定要删除设备 "${_devices[index].name}" 吗？'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('取消', style: TextStyle(color: Colors.white70)),
+            child: const Text('取消'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -187,22 +200,20 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
     final onlineCount = _devices.where((d) => d.isOnline).length;
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: Colors.white,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             expandedHeight: 120,
             pinned: true,
-            backgroundColor: AppTheme.surfaceColor,
+            backgroundColor: Colors.white,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+              icon: const Icon(Icons.arrow_back_ios, color: Color(0xFF1A1A2E)),
               onPressed: () => Navigator.pop(context),
             ),
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(widget.categoryName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-              background: Container(
-                decoration: BoxDecoration(gradient: AppTheme.deepSpaceGradient),
-              ),
+              title: Text(widget.categoryName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1A1A2E))),
+              background: Container(color: Colors.white),
             ),
           ),
           SliverToBoxAdapter(
@@ -210,17 +221,17 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
               child: Row(
                 children: [
-                  Text('我的设备', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                  const Text('我的设备', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1A1A2E))),
                   const Spacer(),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(color: AppTheme.onlineColor.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
+                    decoration: BoxDecoration(color: const Color(0xFF52C41A).withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(width: 6, height: 6, decoration: const BoxDecoration(color: AppTheme.onlineColor, shape: BoxShape.circle)),
+                        Container(width: 6, height: 6, decoration: const BoxDecoration(color: Color(0xFF52C41A), shape: BoxShape.circle)),
                         const SizedBox(width: 4),
-                        Text('$onlineCount/${_devices.length} 在线', style: const TextStyle(fontSize: 12, color: AppTheme.onlineColor)),
+                        Text('$onlineCount/${_devices.length} 在线', style: const TextStyle(fontSize: 12, color: Color(0xFF52C41A))),
                       ],
                     ),
                   ),
@@ -235,9 +246,9 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
                 child: Center(
                   child: Column(
                     children: [
-                      Icon(Icons.devices_other, color: Colors.white24, size: 48),
+                      Icon(Icons.devices_other, color: Colors.grey, size: 48),
                       SizedBox(height: 16),
-                      Text('暂无设备', style: TextStyle(color: Colors.white54, fontSize: 16)),
+                      Text('暂无设备', style: TextStyle(color: Colors.grey, fontSize: 16)),
                     ],
                   ),
                 ),
@@ -267,11 +278,10 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
 
   Widget _buildDeviceCard(SmartDevice device, int index) {
     final isOnline = device.isOnline;
-    final statusColor = isOnline ? AppTheme.onlineColor : AppTheme.offlineColor;
+    final statusColor = isOnline ? const Color(0xFF52C41A) : Colors.grey;
 
     return InkWell(
       onTap: () {
-        // 进入设备详情页
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -284,9 +294,10 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppTheme.cardBackground,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: statusColor.withOpacity(0.3), width: 1),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 10, offset: const Offset(0, 4))],
         ),
         child: Column(
           children: [
@@ -305,7 +316,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: Text(device.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                            child: Text(device.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF1A1A2E))),
                           ),
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -315,25 +326,25 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
                         ],
                       ),
                       const SizedBox(height: 4),
-                      Text(device.model, style: const TextStyle(fontSize: 12, color: Colors.white54)),
+                      Text(device.model.isEmpty ? device.type.displayName : device.model, style: const TextStyle(fontSize: 12, color: Colors.grey)),
                     ],
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.more_vert, color: Colors.white38),
+                  icon: const Icon(Icons.more_vert, color: Colors.grey),
                   onPressed: () => _showDeviceOptions(index),
                 ),
               ],
             ),
             if (isOnline && device.parameters.isNotEmpty) ...[
               const SizedBox(height: 12),
-              const Divider(color: Colors.white12, height: 1),
+              const Divider(color: Color(0xFFEEEEEE), height: 1),
               const SizedBox(height: 12),
               Row(
                 children: [
-                  Expanded(child: _buildMiniStat('电量', device.mainValue, Icons.battery_full, AppTheme.successColor)),
-                  Container(width: 1, height: 30, color: Colors.white12),
-                  Expanded(child: _buildMiniStat('状态', device.statusText, Icons.info_outline, AppTheme.primaryColor)),
+                  Expanded(child: _buildMiniStat('电量', device.mainValue, Icons.battery_full, const Color(0xFF52C41A))),
+                  Container(width: 1, height: 30, color: const Color(0xFFEEEEEE)),
+                  Expanded(child: _buildMiniStat('状态', device.statusText, Icons.info_outline, const Color(0xFF4A90D9))),
                 ],
               ),
             ],
@@ -353,7 +364,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(value, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color)),
-            Text(label, style: const TextStyle(fontSize: 10, color: Colors.white54)),
+            Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
           ],
         ),
       ],
