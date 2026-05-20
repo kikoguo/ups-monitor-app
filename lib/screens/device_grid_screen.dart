@@ -237,7 +237,7 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0x00000000),
       builder: (ctx) => Container(
         height: MediaQuery.of(ctx).size.height * 0.7,
         decoration: const BoxDecoration(

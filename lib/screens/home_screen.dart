@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryColor.withOpacity(0.15) : Colors.transparent,
+          color: isSelected ? AppTheme.primaryColor.withOpacity(0.15) : const Color(0x00000000),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(

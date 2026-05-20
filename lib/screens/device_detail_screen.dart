@@ -69,7 +69,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   void _showConnectionDialog() {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: const Color(0x00000000),
       builder: (ctx) => Container(
         padding: const EdgeInsets.all(24),
         decoration: const BoxDecoration(

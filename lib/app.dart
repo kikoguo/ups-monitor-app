@@ -86,7 +86,7 @@ class _MainScreenState extends State<MainScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF4A90D9).withOpacity(0.1) : Colors.transparent,
+          color: isSelected ? const Color(0xFF4A90D9).withOpacity(0.1) : const Color(0x00000000),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(

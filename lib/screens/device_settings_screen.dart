@@ -47,9 +47,9 @@ class _DeviceSettingsScreenState extends State<DeviceSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFFFFFF),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFFFFFFF),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Color(0xFF1A1A2E)),
@@ -362,7 +362,7 @@ class _DeviceSettingsScreenState extends State<DeviceSettingsScreen> {
         onPressed: _saveSettings,
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF4A90D9),
-          foregroundColor: Colors.white,
+          foregroundColor: const Color(0xFFFFFFFF),
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),

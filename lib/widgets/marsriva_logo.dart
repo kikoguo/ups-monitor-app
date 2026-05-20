@@ -27,7 +27,7 @@ class MarsrivaLogo extends StatelessWidget {
             boxShadow: [BoxShadow(color: AppTheme.primaryColor.withOpacity(0.4), blurRadius: 15, offset: const Offset(0, 5))],
           ),
           child: Center(
-            child: Icon(Icons.bolt, size: size * 0.6, color: Colors.white),
+            child: Icon(Icons.bolt, size: size * 0.6, color: const Color(0xFFFFFFFF)),
           ),
         ),
         if (showText) ...[
@@ -49,7 +49,7 @@ class MarsrivaLogo extends StatelessWidget {
             style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w600,
-              color: Colors.white70,
+              color: const Color(0xFFB0BEC5),
               letterSpacing: 1,
             ),
           ),
@@ -73,12 +73,12 @@ class MarsrivaSplash extends StatelessWidget {
             children: [
               const MarsrivaLogo(size: 100, showText: true, showTagline: true),
               const SizedBox(height: 24),
-              const Text('UPS 智能监控系统', style: TextStyle(fontSize: 16, color: Colors.white70)),
+              const Text('UPS 智能监控系统', style: TextStyle(fontSize: 16, color: Color(0xFFB0BEC5))),
               const SizedBox(height: 40),
               SizedBox(
                 width: 200,
                 child: LinearProgressIndicator(
-                  backgroundColor: Colors.white24,
+                  backgroundColor: const Color(0xFF3D3D3D),
                   valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryLightColor),
                 ),
               ),
@@ -115,7 +115,7 @@ class GlowButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: color,
-          foregroundColor: Colors.white,
+          foregroundColor: const Color(0xFFFFFFFF),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),

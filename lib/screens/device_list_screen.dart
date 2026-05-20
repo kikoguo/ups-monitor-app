@@ -67,7 +67,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
   void _showDeviceOptions(int index) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFFFFFF),
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) => SafeArea(
         child: Column(
@@ -104,8 +104,8 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.delete_outline, color: Colors.redAccent),
-              title: const Text('删除设备', style: TextStyle(color: Colors.redAccent)),
+              leading: const Icon(Icons.delete_outline, color: Color(0xFFFF5252)),
+              title: const Text('删除设备', style: TextStyle(color: Color(0xFFFF5252))),
               onTap: () {
                 Navigator.pop(context);
                 _confirmDelete(index);
@@ -187,7 +187,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
               });
               Navigator.pop(context);
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF5252)),
             child: const Text('删除'),
           ),
         ],
@@ -200,20 +200,20 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
     final onlineCount = _devices.where((d) => d.isOnline).length;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFFFFFF),
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             expandedHeight: 120,
             pinned: true,
-            backgroundColor: Colors.white,
+            backgroundColor: const Color(0xFFFFFFFF),
             leading: IconButton(
               icon: const Icon(Icons.arrow_back_ios, color: Color(0xFF1A1A2E)),
               onPressed: () => Navigator.pop(context),
             ),
             flexibleSpace: FlexibleSpaceBar(
               title: Text(widget.categoryName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1A1A2E))),
-              background: Container(color: Colors.white),
+              background: Container(color: const Color(0xFFFFFFFF)),
             ),
           ),
           SliverToBoxAdapter(
@@ -294,10 +294,10 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFFFFFFFF),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: statusColor.withOpacity(0.3), width: 1),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 10, offset: const Offset(0, 4))],
+          boxShadow: [BoxShadow(color: const Color(0xFF000000).withOpacity(0.06), blurRadius: 10, offset: const Offset(0, 4))],
         ),
         child: Column(
           children: [
