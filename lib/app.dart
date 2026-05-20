@@ -94,7 +94,7 @@ class _MainScreenState extends State<MainScreen> {
           children: [
             Icon(
               icon,
-              color: isSelected ? const Color(0xFF4A90D9) : Colors.grey,
+              color: isSelected ? const Color(0xFF4A90D9) : const Color(0xFF9E9E9E),
               size: 24,
             ),
             const SizedBox(height: 4),
@@ -102,7 +102,7 @@ class _MainScreenState extends State<MainScreen> {
               label,
               style: TextStyle(
                 fontSize: 11,
-                color: isSelected ? const Color(0xFF4A90D9) : Colors.grey,
+                color: isSelected ? const Color(0xFF4A90D9) : const Color(0xFF9E9E9E),
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),

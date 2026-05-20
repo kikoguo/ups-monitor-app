@@ -64,9 +64,9 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
   Widget _buildSearchBar() {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
-        border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
+        border: Border(bottom: BorderSide(color: Color(0xFFE0E0E0))),
       ),
       child: Row(
         children: [
@@ -80,8 +80,8 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
                 onChanged: (value) => setState(() => _searchQuery = value),
                 decoration: const InputDecoration(
                   hintText: '设备名称',
-                  hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
-                  prefixIcon: Icon(Icons.search, color: Colors.grey),
+                  hintStyle: TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
+                  prefixIcon: Icon(Icons.search, color: Color(0xFF9E9E9E)),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 ),
@@ -112,16 +112,16 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.devices_other, size: 64, color: Colors.grey[300]),
+            const Icon(Icons.devices_other, size: 64, color: Color(0xFFE0E0E0)),
             const SizedBox(height: 16),
             const Text(
               '暂无设备',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(fontSize: 16, color: Color(0xFF9E9E9E)),
             ),
             const SizedBox(height: 8),
             const Text(
               '点击右上角 + 添加设备',
-              style: TextStyle(fontSize: 14, color: Colors.grey),
+              style: TextStyle(fontSize: 14, color: Color(0xFF9E9E9E)),
             ),
           ],
         ),
@@ -200,7 +200,7 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
                   const SizedBox(height: 4),
                   Text(
                     device.type.displayName,
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    style: const TextStyle(fontSize: 12, color: Color(0xFF757575)),
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -218,7 +218,7 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
                         width: 8,
                         height: 8,
                         decoration: BoxDecoration(
-                          color: device.isOnline ? const Color(0xFF52C41A) : Colors.grey,
+                          color: device.isOnline ? const Color(0xFF52C41A) : const Color(0xFF9E9E9E),
                           shape: BoxShape.circle,
                         ),
                       ),
@@ -251,7 +251,7 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey[300],
+                color: const Color(0xFFE0E0E0),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),

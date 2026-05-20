@@ -27,7 +27,7 @@ enum DeviceType {
 
 /// 设备运行模式
 enum DeviceMode {
-  standby('standby', '待机', Icons.power_off, Colors.grey),
+  standby('standby', '待机', Icons.power_off, Color(0xFF9E9E9E)),
   charging('charging', '充电', Icons.battery_charging_full, Color(0xFF52C41A)),
   discharging('discharging', '放电', Icons.battery_alert, Color(0xFFFA8C16)),
   gridConnected('grid_connected', '并网', Icons.electrical_services, Color(0xFF4A90D9)),

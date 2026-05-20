@@ -71,9 +71,9 @@ class GaugeChart extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               label,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
-                color: Colors.grey[600],
+                color: Color(0xFF757575),
               ),
             ),
           ],
@@ -137,7 +137,7 @@ class _GaugePainter extends CustomPainter {
 
   void _drawTicks(Canvas canvas, Offset center, double radius) {
     final tickPaint = Paint()
-      ..color = Colors.grey.withOpacity(0.3)
+      ..color = const Color(0xFF4D4D4D)
       ..strokeWidth = 2;
 
     const tickCount = 5;

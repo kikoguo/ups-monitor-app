@@ -85,14 +85,14 @@ class DeviceTile extends StatelessWidget {
                             Icon(
                               Icons.wifi,
                               size: 14,
-                              color: Colors.grey[400],
+                              color: const Color(0xFFBDBDBD),
                             ),
                             const SizedBox(width: 4),
                             Text(
                               device.ipAddress,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 12,
-                                color: Colors.grey[500],
+                                color: Color(0xFF9E9E9E),
                               ),
                             ),
                           ],
@@ -102,9 +102,9 @@ class DeviceTile extends StatelessWidget {
                   ),
                   
                   // 箭头
-                  Icon(
+                  const Icon(
                     Icons.chevron_right,
-                    color: Colors.grey[400],
+                    color: Color(0xFFBDBDBD),
                   ),
                 ],
               ),
@@ -170,9 +170,9 @@ class DeviceTile extends StatelessWidget {
         ),
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 12,
-            color: Colors.grey[500],
+            color: Color(0xFF9E9E9E),
           ),
         ),
       ],
@@ -180,7 +180,7 @@ class DeviceTile extends StatelessWidget {
   }
 
   Color _getStatusColor() {
-    if (status == null) return Colors.grey;
+    if (status == null) return const Color(0xFF757575);
     return AppTheme.getStatusColor(status!.upsMode);
   }
 

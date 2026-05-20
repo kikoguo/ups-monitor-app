@@ -199,9 +199,9 @@ class _ControlScreenState extends State<ControlScreen> {
                                 const SizedBox(height: 4),
                                 Text(
                                   widget.device.ipAddress,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 14,
-                                    color: Colors.grey[600],
+                                    color: Color(0xFF757575),
                                   ),
                                 ),
                               ],
@@ -276,7 +276,7 @@ class _ControlScreenState extends State<ControlScreen> {
                         child: _buildControlButton(
                           icon: Icons.volume_off,
                           label: t('Mute'),
-                          color: Colors.grey,
+                          color: const Color(0xFF9E9E9E),
                           onPressed: _mute,
                         ),
                       ),

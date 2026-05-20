@@ -117,9 +117,9 @@ class AppTheme {
       backgroundColor: primaryLightColor,
       foregroundColor: Colors.white,
     ),
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: primaryLightColor,
-      unselectedItemColor: Colors.grey[400],
+      unselectedItemColor: Color(0xFFBDBDBD),
       backgroundColor: surfaceColor,
       elevation: 8,
     ),

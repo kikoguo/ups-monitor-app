@@ -76,7 +76,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
             Container(
               margin: const EdgeInsets.only(top: 8),
               width: 40, height: 4,
-              decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)),
+              decoration: BoxDecoration(color: const Color(0xFFE0E0E0), borderRadius: BorderRadius.circular(2)),
             ),
             const SizedBox(height: 16),
             ListTile(
@@ -88,7 +88,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.settings, color: Colors.grey),
+              leading: const Icon(Icons.settings, color: Color(0xFF757575)),
               title: const Text('设备设置'),
               onTap: () {
                 Navigator.pop(context);
@@ -96,7 +96,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.info_outline, color: Colors.grey),
+              leading: const Icon(Icons.info_outline, color: Color(0xFF757575)),
               title: const Text('设备信息'),
               onTap: () {
                 Navigator.pop(context);
@@ -161,7 +161,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         children: [
-          Text('$label: ', style: const TextStyle(color: Colors.grey, fontSize: 14)),
+          Text('$label: ', style: const TextStyle(color: Color(0xFF757575), fontSize: 14)),
           Text(value, style: const TextStyle(fontSize: 14)),
         ],
       ),
@@ -246,9 +246,9 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
                 child: Center(
                   child: Column(
                     children: [
-                      Icon(Icons.devices_other, color: Colors.grey, size: 48),
+                      Icon(Icons.devices_other, color: const Color(0xFF9E9E9E), size: 48),
                       SizedBox(height: 16),
-                      Text('暂无设备', style: TextStyle(color: Colors.grey, fontSize: 16)),
+                      Text('暂无设备', style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 16)),
                     ],
                   ),
                 ),
@@ -278,7 +278,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
 
   Widget _buildDeviceCard(SmartDevice device, int index) {
     final isOnline = device.isOnline;
-    final statusColor = isOnline ? const Color(0xFF52C41A) : Colors.grey;
+    final statusColor = isOnline ? const Color(0xFF52C41A) : const Color(0xFF9E9E9E);
 
     return InkWell(
       onTap: () {
@@ -326,12 +326,12 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
                         ],
                       ),
                       const SizedBox(height: 4),
-                      Text(device.model.isEmpty ? device.type.displayName : device.model, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                      Text(device.model.isEmpty ? device.type.displayName : device.model, style: const TextStyle(fontSize: 12, color: Color(0xFF757575))),
                     ],
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.more_vert, color: Colors.grey),
+                  icon: const Icon(Icons.more_vert, color: Color(0xFF757575)),
                   onPressed: () => _showDeviceOptions(index),
                 ),
               ],
@@ -364,7 +364,7 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(value, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color)),
-            Text(label, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+            Text(label, style: const TextStyle(fontSize: 10, color: Color(0xFF757575))),
           ],
         ),
       ],

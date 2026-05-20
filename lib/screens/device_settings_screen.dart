@@ -109,12 +109,12 @@ class _DeviceSettingsScreenState extends State<DeviceSettingsScreen> {
                 const SizedBox(height: 4),
                 Text(
                   _device.type.displayName,
-                  style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                  style: const TextStyle(fontSize: 14, color: Color(0xFF757575)),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   'IP: ${_device.localIp ?? "未设置"}',
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: const TextStyle(fontSize: 12, color: Color(0xFF757575)),
                 ),
               ],
             ),
@@ -288,7 +288,7 @@ class _DeviceSettingsScreenState extends State<DeviceSettingsScreen> {
       padding: const EdgeInsets.only(bottom: 12, top: 8),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.grey),
+        style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF757575)),
       ),
     );
   }

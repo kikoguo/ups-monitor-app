@@ -65,7 +65,7 @@ class MoreDataScreen extends StatelessWidget {
             ],
           ),
           const Spacer(),
-          Text(param.name, style: const TextStyle(fontSize: 13, color: Colors.grey)),
+          Text(param.name, style: const TextStyle(fontSize: 13, color: Color(0xFF757575))),
         ],
       ),
     );
