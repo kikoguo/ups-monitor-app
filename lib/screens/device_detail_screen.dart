@@ -262,7 +262,28 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: _buildContent(),
+        child: Builder(
+          builder: (context) {
+            try {
+              return _buildContent();
+            } catch (e, stackTrace) {
+              print('DeviceDetailScreen build error: $e');
+              print('Stack trace: $stackTrace');
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                    const SizedBox(height: 16),
+                    Text('页面渲染错误', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red)),
+                    const SizedBox(height: 8),
+                    Text('$e', style: const TextStyle(fontSize: 14, color: Colors.grey)),
+                  ],
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }
