@@ -28,18 +28,13 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   void initState() {
     super.initState();
     _device = widget.device;
-    // 确保设备参数不为 null
     if (_device.parameters == null) {
       _device = _device.copyWith(parameters: {});
     }
-    // 立即完成加载（不再进行网络请求）
     _isLoading = false;
   }
 
-  Future<void> _loadRealtimeData() async {
-    // Web 环境暂时跳过网络请求，直接使用本地数据
-    // 如果需要，可以在这里添加定时刷新逻辑
-  }
+  Future<void> _loadRealtimeData() async {}
 
   Future<void> _connectDevice(ConnectionType type) async {
     setState(() {
@@ -47,13 +42,11 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
       _connectionError = null;
     });
 
-    // 模拟连接过程
     await Future.delayed(const Duration(seconds: 2));
 
     if (mounted) {
       setState(() {
         _isConnecting = false;
-        // 假设连接成功
         _device = SmartDevice(
           id: _device.id,
           name: _device.name,
@@ -80,7 +73,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
       builder: (ctx) => Container(
         padding: const EdgeInsets.all(24),
         decoration: const BoxDecoration(
-          color: Colors.white,
+          color: Color(0xFFFFFFFF),
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(
@@ -90,7 +83,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.grey[300],
+                color: const Color(0xFFBDBDBD),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -102,7 +95,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
             const SizedBox(height: 8),
             Text(
               '请选择连接方式：${_device.localIp}',
-              style: const TextStyle(fontSize: 14, color: Colors.grey),
+              style: const TextStyle(fontSize: 14, color: Color(0xFF757575)),
             ),
             const SizedBox(height: 24),
             Row(
@@ -122,7 +115,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
                       ),
                       child: Column(
                         children: [
-                          Icon(Icons.wifi, color: const Color(0xFF4A90D9), size: 40),
+                          const Icon(Icons.wifi, color: Color(0xFF4A90D9), size: 40),
                           const SizedBox(height: 12),
                           const Text(
                             'WiFi 连接',
@@ -131,7 +124,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
                           const SizedBox(height: 4),
                           Text(
                             _device.localIp ?? '未设置',
-                            style: const TextStyle(fontSize: 12, color: Colors.grey),
+                            style: const TextStyle(fontSize: 12, color: Color(0xFF757575)),
                           ),
                         ],
                       ),
@@ -154,7 +147,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
                       ),
                       child: Column(
                         children: [
-                          Icon(Icons.bluetooth, color: const Color(0xFF722ED1), size: 40),
+                          const Icon(Icons.bluetooth, color: Color(0xFF722ED1), size: 40),
                           const SizedBox(height: 12),
                           const Text(
                             '蓝牙连接',
@@ -163,7 +156,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
                           const SizedBox(height: 4),
                           const Text(
                             '搜索中...',
-                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                            style: TextStyle(fontSize: 12, color: Color(0xFF757575)),
                           ),
                         ],
                       ),
@@ -223,7 +216,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
                 ),
                 child: const Text(
                   '连接',
-                  style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500),
+                  style: TextStyle(fontSize: 12, color: Color(0xFFFFFFFF), fontWeight: FontWeight.w500),
                 ),
               ),
             ],
@@ -260,48 +253,23 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFFFFFF),
       body: SafeArea(
-        child: Builder(
-          builder: (context) {
-            try {
-              return _buildContent();
-            } catch (e, stackTrace) {
-              print('DeviceDetailScreen build error: $e');
-              print('Stack trace: $stackTrace');
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.error_outline, color: Colors.red, size: 48),
-                    const SizedBox(height: 16),
-                    Text('页面渲染错误', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red)),
-                    const SizedBox(height: 8),
-                    Text('$e', style: const TextStyle(fontSize: 14, color: Colors.grey)),
-                  ],
-                ),
-              );
-            }
-          },
-        ),
+        child: _buildContent(),
       ),
     );
   }
 
   Widget _buildContent() {
-    // 获取设备类型代码，确保不为空
     final String typeCode = _device.type.code.isNotEmpty ? _device.type.code : 'general';
     final params = DeviceParameterConfig.getParameters(typeCode);
     
-    // 获取主参数和次要参数
     List<DeviceParameter> mainParams = params.where((p) => p.isMain).toList();
     List<DeviceParameter> otherParams = params.where((p) => !p.isMain).take(6).toList();
 
-    // 如果主参数列表为空，使用前4个参数
     if (mainParams.isEmpty) {
       mainParams = params.take(4).toList();
     }
-    // 如果次要参数列表为空，使用剩余参数
     if (otherParams.isEmpty) {
       otherParams = params.skip(4).take(6).toList();
     }
@@ -346,10 +314,10 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
           children: [
             const Icon(Icons.warning_amber, color: Color(0xFFFA8C16), size: 20),
             const SizedBox(width: 8),
-            Expanded(
+            const Expanded(
               child: Text(
                 '数据加载失败，显示缓存数据',
-                style: const TextStyle(fontSize: 13, color: Color(0xFFFA8C16)),
+                style: TextStyle(fontSize: 13, color: Color(0xFFFA8C16)),
               ),
             ),
             GestureDetector(
@@ -362,7 +330,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
                 ),
                 child: const Text(
                   '重试',
-                  style: TextStyle(fontSize: 12, color: Colors.white),
+                  style: TextStyle(fontSize: 12, color: Color(0xFFFFFFFF)),
                 ),
               ),
             ),
@@ -376,7 +344,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
     return SliverToBoxAdapter(
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: const BoxDecoration(color: Colors.white),
+        decoration: const BoxDecoration(color: Color(0xFFFFFFFF)),
         child: Row(
           children: [
             GestureDetector(
@@ -409,9 +377,9 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
         margin: const EdgeInsets.all(16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFFFFFFFF),
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 10, offset: const Offset(0, 4))],
+          boxShadow: [const BoxShadow(color: Color(0x0F000000), blurRadius: 10, offset: Offset(0, 4))],
         ),
         child: Column(
           children: [
@@ -438,7 +406,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFF757575))),
         const SizedBox(height: 4),
         Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xFF1A1A2E))),
       ],
@@ -451,7 +419,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+        decoration: BoxDecoration(color: const Color(0xFFFFFFFF), borderRadius: BorderRadius.circular(16)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -469,7 +437,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
                       decoration: BoxDecoration(
                         color: isActive ? mode.color.withOpacity(0.15) : const Color(0xFFF5F5F5),
                         shape: BoxShape.circle,
-                        border: isActive ? Border.all(color: mode.color, width: 2) : Border.all(color: const Color(0xFFE0E0E0), width: 1),
+                        border: Border.all(color: isActive ? mode.color : const Color(0xFFE0E0E0), width: isActive ? 2 : 1),
                       ),
                       child: Icon(mode.icon, color: isActive ? mode.color : const Color(0xFF9E9E9E), size: 24),
                     ),
@@ -501,10 +469,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
           itemCount: mainParams.length,
           itemBuilder: (context, index) {
             final param = mainParams[index];
-            // 优先使用实时数据，其次使用设备参数，最后显示默认值
-            final value = _realtimeData[param.key]?.toString() 
-                ?? _device.parameters[param.key]?.toString() 
-                ?? '--';
+            final value = _realtimeData[param.key]?.toString() ?? _device.parameters[param.key]?.toString() ?? '--';
             return _buildParamCard(param, value);
           },
         ),
@@ -516,9 +481,9 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [const BoxShadow(color: Color(0x0F000000), blurRadius: 10, offset: Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -537,7 +502,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
             ],
           ),
           const Spacer(),
-          Text(param.name, style: const TextStyle(fontSize: 13, color: Colors.grey)),
+          Text(param.name, style: const TextStyle(fontSize: 13, color: Color(0xFF757575))),
         ],
       ),
     );
@@ -575,13 +540,13 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+          decoration: BoxDecoration(color: const Color(0xFFFFFFFF), borderRadius: BorderRadius.circular(12)),
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text('查看更多', style: TextStyle(fontSize: 14, color: Colors.grey)),
+              Text('查看更多', style: TextStyle(fontSize: 14, color: Color(0xFF757575))),
               SizedBox(width: 4),
-              Icon(Icons.chevron_right, color: Colors.grey, size: 20),
+              Icon(Icons.chevron_right, color: Color(0xFF757575), size: 20),
             ],
           ),
         ),
@@ -605,10 +570,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
           itemCount: otherParams.length,
           itemBuilder: (context, index) {
             final param = otherParams[index];
-            // 优先使用实时数据，其次使用设备参数，最后显示默认值
-            final value = _realtimeData[param.key]?.toString() 
-                ?? _device.parameters[param.key]?.toString() 
-                ?? '--';
+            final value = _realtimeData[param.key]?.toString() ?? _device.parameters[param.key]?.toString() ?? '--';
             return _buildSmallParamCard(param, value);
           },
         ),
@@ -619,7 +581,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   Widget _buildSmallParamCard(DeviceParameter param, String value) {
     return Container(
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(color: const Color(0xFFFFFFFF), borderRadius: BorderRadius.circular(12)),
       child: Row(
         children: [
           _getParamIcon(param.icon),
@@ -631,7 +593,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
               children: [
                 Text('$value ${param.unit}', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF1A1A2E))),
                 const SizedBox(height: 2),
-                Text(param.name, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                Text(param.name, style: const TextStyle(fontSize: 12, color: Color(0xFF757575))),
               ],
             ),
           ),
@@ -713,9 +675,9 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFFFFFFFF),
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 10, offset: const Offset(0, 4))],
+          boxShadow: [const BoxShadow(color: Color(0x0F000000), blurRadius: 10, offset: Offset(0, 4))],
         ),
         child: Column(
           children: [
