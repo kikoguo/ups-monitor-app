@@ -22,6 +22,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   bool _isLoading = true;
   bool _isConnecting = false;
   String? _connectionError;
+  String? _loadError;
 
   @override
   void initState() {
@@ -31,13 +32,25 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   }
 
   Future<void> _loadRealtimeData() async {
-    setState(() => _isLoading = true);
-    final data = await _remoteService.getDeviceRealtimeData(_device.id, 'demo_token');
-    if (mounted) {
-      setState(() {
-        _realtimeData = data;
-        _isLoading = false;
-      });
+    setState(() {
+      _isLoading = true;
+      _loadError = null;
+    });
+    try {
+      final data = await _remoteService.getDeviceRealtimeData(_device.id, 'demo_token');
+      if (mounted) {
+        setState(() {
+          _realtimeData = data;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _loadError = e.toString();
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -263,25 +276,90 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
     final mainParams = params.where((p) => p.isMain).toList();
     final otherParams = params.where((p) => !p.isMain).take(6).toList();
 
+    // 如果主参数列表为空，至少显示一些默认参数
+    final displayMainParams = mainParams.isNotEmpty 
+        ? mainParams 
+        : params.take(4).toList();
+    final displayOtherParams = otherParams.isNotEmpty 
+        ? otherParams 
+        : params.skip(4).take(6).toList();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
-            : CustomScrollView(
-                slivers: [
-                  _buildConnectionBanner(),
-                  _buildAppBar(),
-                  _buildDeviceInfoCard(),
-                  _buildModeSelector(),
-                  _buildMainParameters(mainParams),
-                  _buildMoreDataButton(),
-                  _buildOtherParameters(otherParams),
-                  if (_device.alarms.isNotEmpty) _buildAlarmSection(),
-                  _buildControlButtons(),
-                  const SliverToBoxAdapter(child: SizedBox(height: 32)),
-                ],
+            : _buildErrorView(),
+      ),
+    );
+  }
+
+  Widget _buildErrorView() {
+    final params = DeviceParameterConfig.getParameters(_device.type.code);
+    final mainParams = params.where((p) => p.isMain).toList();
+    final otherParams = params.where((p) => !p.isMain).take(6).toList();
+
+    // 如果主参数列表为空，至少显示一些默认参数
+    final displayMainParams = mainParams.isNotEmpty 
+        ? mainParams 
+        : params.take(4).toList();
+    final displayOtherParams = otherParams.isNotEmpty 
+        ? otherParams 
+        : params.skip(4).take(6).toList();
+
+    return CustomScrollView(
+      slivers: [
+        _buildConnectionBanner(),
+        _buildAppBar(),
+        _buildDeviceInfoCard(),
+        _buildModeSelector(),
+        if (_loadError != null) _buildErrorBanner(),
+        _buildMainParameters(displayMainParams),
+        _buildMoreDataButton(),
+        _buildOtherParameters(displayOtherParams),
+        if (_device.alarms.isNotEmpty) _buildAlarmSection(),
+        _buildControlButtons(),
+        const SliverToBoxAdapter(child: SizedBox(height: 32)),
+      ],
+    );
+  }
+
+  Widget _buildErrorBanner() {
+    return SliverToBoxAdapter(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFAAD14).withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: const Color(0xFFFAAD14).withOpacity(0.3)),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.warning_amber, color: Color(0xFFFA8C16), size: 20),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                '数据加载失败，显示缓存数据',
+                style: const TextStyle(fontSize: 13, color: Color(0xFFFA8C16)),
               ),
+            ),
+            GestureDetector(
+              onTap: _loadRealtimeData,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFA8C16),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: const Text(
+                  '重试',
+                  style: TextStyle(fontSize: 12, color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -400,6 +478,9 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   }
 
   Widget _buildMainParameters(List<DeviceParameter> mainParams) {
+    if (mainParams.isEmpty) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
     return SliverToBoxAdapter(
       child: Container(
         margin: const EdgeInsets.all(16),
@@ -412,8 +493,11 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
           itemCount: mainParams.length,
           itemBuilder: (context, index) {
             final param = mainParams[index];
-            final value = _realtimeData[param.key] ?? _device.parameters[param.key] ?? '--';
-            return _buildParamCard(param, value.toString());
+            // 优先使用实时数据，其次使用设备参数，最后显示默认值
+            final value = _realtimeData[param.key]?.toString() 
+                ?? _device.parameters[param.key]?.toString() 
+                ?? '--';
+            return _buildParamCard(param, value);
           },
         ),
       ),
@@ -486,6 +570,9 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   }
 
   Widget _buildOtherParameters(List<DeviceParameter> otherParams) {
+    if (otherParams.isEmpty) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
     return SliverToBoxAdapter(
       child: Container(
         margin: const EdgeInsets.all(16),
@@ -498,8 +585,11 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
           itemCount: otherParams.length,
           itemBuilder: (context, index) {
             final param = otherParams[index];
-            final value = _realtimeData[param.key] ?? _device.parameters[param.key] ?? '--';
-            return _buildSmallParamCard(param, value.toString());
+            // 优先使用实时数据，其次使用设备参数，最后显示默认值
+            final value = _realtimeData[param.key]?.toString() 
+                ?? _device.parameters[param.key]?.toString() 
+                ?? '--';
+            return _buildSmallParamCard(param, value);
           },
         ),
       ),

@@ -1,0 +1,5 @@
+Build started at 周五 2026/05/15 17:41:31.30 
+======================================== 
+Resolving dependencies...
+Got socket error trying to find package flutter_svg at https://pub.dev.
+Failed to update packages.
