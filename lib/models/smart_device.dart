@@ -164,6 +164,8 @@ class SmartDevice extends Equatable {
         return '${parameters['power'] ?? '--'}W';
       case DeviceType.solar:
         return '${parameters['generation'] ?? '--'}kWh';
+      default:
+        return '--';
     }
   }
 

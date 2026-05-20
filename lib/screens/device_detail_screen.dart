@@ -384,7 +384,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
               child: const Icon(Icons.arrow_back_ios, color: Color(0xFF1A1A2E)),
             ),
             const SizedBox(width: 12),
-            Icon(Icons.wifi, color: _device.isOnline ? const Color(0xFF52C41A) : Colors.grey, size: 20),
+            Icon(Icons.wifi, color: _device.isOnline ? const Color(0xFF52C41A) : const Color(0xFF9E9E9E), size: 20),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -446,7 +446,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   }
 
   Widget _buildModeSelector() {
-    final modes = [DeviceMode.standby, DeviceMode.charging, DeviceMode.discharging, DeviceMode.offGrid, DeviceMode.gridConnected];
+    final modes = [DeviceMode.standby, DeviceMode.online, DeviceMode.charging, DeviceMode.discharging, DeviceMode.offGrid, DeviceMode.gridConnected, DeviceMode.offline];
     return SliverToBoxAdapter(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -471,10 +471,10 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
                         shape: BoxShape.circle,
                         border: isActive ? Border.all(color: mode.color, width: 2) : null,
                       ),
-                      child: Icon(mode.icon, color: isActive ? mode.color : Colors.grey, size: 24),
+                      child: Icon(mode.icon, color: isActive ? mode.color : const Color(0xFF9E9E9E), size: 24),
                     ),
                     const SizedBox(height: 6),
-                    Text(mode.displayName, style: TextStyle(fontSize: 11, color: isActive ? mode.color : Colors.grey)),
+                    Text(mode.displayName, style: TextStyle(fontSize: 11, color: isActive ? mode.color : const Color(0xFF9E9E9E))),
                   ],
                 );
               }).toList(),
@@ -696,9 +696,9 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
         margin: const EdgeInsets.all(16),
         child: Row(
           children: [
-            Expanded(child: _buildControlButton('开关', Icons.power_settings_new, _device.parameters['switch_state'] == true ? const Color(0xFFFF4D4F) : Colors.grey, () {})),
+            Expanded(child: _buildControlButton('开关', Icons.power_settings_new, _device.parameters['switch_state'] == true ? const Color(0xFFFF4D4F) : const Color(0xFF9E9E9E), () {})),
             const SizedBox(width: 12),
-            Expanded(child: _buildControlButton('充电', Icons.battery_charging_full, _device.mode == DeviceMode.charging ? const Color(0xFF52C41A) : Colors.grey, () {})),
+            Expanded(child: _buildControlButton('充电', Icons.battery_charging_full, _device.mode == DeviceMode.charging ? const Color(0xFF52C41A) : const Color(0xFF9E9E9E), () {})),
             const SizedBox(width: 12),
             Expanded(child: _buildControlButton('频率', Icons.speed, const Color(0xFF4A90D9), () {})),
           ],
