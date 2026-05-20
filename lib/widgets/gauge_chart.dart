@@ -33,7 +33,7 @@ class GaugeChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final percentage = (value / maxValue * 100).clamp(0.0, 100.0);
+    final percentage = (value / maxValue * 100).clamp(0.0, 100.0).toDouble();
 
     return Card(
       child: Padding(

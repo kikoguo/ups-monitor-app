@@ -30,9 +30,8 @@ jobs:
       
       - name: Add China mirror
         run: |
-          git config --global url "https://github.com.cnpmjs.org/.git" 
-          git config --global url "https://github.com.cnpmjs.org/" .insteadOf "https://github.com/"
-          git config --global url "https://pub.flutter-io.cn/" .insteadOf "https://pub.dev/"
+          git config --global url."https://github.com.cnpmjs.org/".insteadOf "https://github.com/"
+          git config --global url."https://pub.flutter-io.cn/".insteadOf "https://pub.dev/"
       
       - name: Get dependencies
         run: flutter pub get
