@@ -39,7 +39,7 @@ class AppTheme {
       primary: primaryColor,
       secondary: cyanGlow,
       tertiary: purpleAccent,
-      surface: Colors.white,
+      surface: const Color(0xFFFFFFFF),
       error: errorColor,
     ),
     scaffoldBackgroundColor: const Color(0xFFF0F4F8),
@@ -47,32 +47,32 @@ class AppTheme {
       elevation: 0,
       centerTitle: true,
       backgroundColor: primaryColor,
-      foregroundColor: Colors.white,
-      titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
-      iconTheme: IconThemeData(color: Colors.white),
+      foregroundColor: Color(0xFFFFFFFF),
+      titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xFFFFFFFF)),
+      iconTheme: IconThemeData(color: Color(0xFFFFFFFF)),
     ),
     cardTheme: const CardThemeData(
       elevation: 4,
-      color: Colors.white,
+      color: Color(0xFFFFFFFF),
       shadowColor: Color(0x3300B8A9),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(16))),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primaryColor,
-        foregroundColor: Colors.white,
+        foregroundColor: const Color(0xFFFFFFFF),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: primaryColor,
-      foregroundColor: Colors.white,
+      foregroundColor: Color(0xFFFFFFFF),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: primaryColor,
       unselectedItemColor: Color(0xFF78909C),
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFFFFFFFF),
       elevation: 8,
     ),
   );
@@ -95,9 +95,9 @@ class AppTheme {
       elevation: 0,
       centerTitle: true,
       backgroundColor: surfaceColor,
-      foregroundColor: Colors.white,
-      titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Colors.white),
-      iconTheme: IconThemeData(color: Colors.white),
+      foregroundColor: Color(0xFFFFFFFF),
+      titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: Color(0xFFFFFFFF)),
+      iconTheme: IconThemeData(color: Color(0xFFFFFFFF)),
     ),
     cardTheme: const CardThemeData(
       elevation: 8,
@@ -108,14 +108,14 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: primaryColor,
-        foregroundColor: Colors.white,
+        foregroundColor: const Color(0xFFFFFFFF),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: primaryLightColor,
-      foregroundColor: Colors.white,
+      foregroundColor: Color(0xFFFFFFFF),
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: primaryLightColor,

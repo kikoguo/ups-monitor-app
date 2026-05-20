@@ -38,8 +38,8 @@ class _MonitorScreenState extends State<MonitorScreen> {
             title: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(widget.deviceName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
-                Text(widget.ipAddress, style: const TextStyle(fontSize: 12, color: Colors.white54)),
+                Text(widget.deviceName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFFFFFFFF))),
+                Text(widget.ipAddress, style: const TextStyle(fontSize: 12, color: Color(0xFFBDBDBD))),
               ],
             ),
             actions: [
@@ -120,13 +120,13 @@ class _MonitorScreenState extends State<MonitorScreen> {
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(color: const Color(0xFFFFFFFF).withOpacity(0.15), borderRadius: BorderRadius.circular(10)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.bolt, color: Colors.white, size: 20),
+                const Icon(Icons.bolt, color: Color(0xFFFFFFFF), size: 20),
                 const SizedBox(width: 8),
-                Text('${t('AC Input')}: ${_upsData['inputVoltage']} / ${_upsData['inputFreq']}', style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w500)),
+                Text('${t('AC Input')}: ${_upsData['inputVoltage']} / ${_upsData['inputFreq']}', style: const TextStyle(fontSize: 14, color: Color(0xFFFFFFFF), fontWeight: FontWeight.w500)),
               ],
             ),
           ),
@@ -138,10 +138,10 @@ class _MonitorScreenState extends State<MonitorScreen> {
   Widget _buildMainStat(String label, String value, IconData icon) {
     return Column(
       children: [
-        Icon(icon, color: Colors.white, size: 28),
+        Icon(icon, color: const Color(0xFFFFFFFF), size: 28),
         const SizedBox(height: 8),
-        Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.white70)),
+        Text(value, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFFFFFFFF))),
+        Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFFB0BEC5))),
       ],
     );
   }
@@ -150,7 +150,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
     final t = localeService.t;
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppTheme.cardBackground, borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withOpacity(0.1))),
+      decoration: BoxDecoration(color: AppTheme.cardBackground, borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFFFFFFFF).withOpacity(0.1))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -158,14 +158,14 @@ class _MonitorScreenState extends State<MonitorScreen> {
             children: [
               Icon(Icons.electrical_services, color: AppTheme.cyanGlow, size: 20),
               const SizedBox(width: 8),
-              Text(t('Voltage & Frequency'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+              Text(t('Voltage & Frequency'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFFFFFFFF))),
             ],
           ),
           const SizedBox(height: 16),
           Row(
             children: [
               Expanded(child: _buildVoltageItem(t('Input'), _upsData['inputVoltage'], _upsData['inputFreq'], AppTheme.cyanGlow)),
-              Container(width: 1, height: 50, color: Colors.white24),
+              Container(width: 1, height: 50, color: const Color(0x3DFFFFFF)),
               Expanded(child: _buildVoltageItem(t('Output'), _upsData['outputVoltage'], _upsData['outputFreq'], AppTheme.purpleAccent)),
             ],
           ),
@@ -179,14 +179,14 @@ class _MonitorScreenState extends State<MonitorScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         children: [
-          Text(label, style: const TextStyle(fontSize: 12, color: Colors.white54)),
+          Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFFBDBDBD))),
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(voltage, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color)),
               const SizedBox(width: 8),
-              Text(freq, style: const TextStyle(fontSize: 14, color: Colors.white54)),
+              Text(freq, style: const TextStyle(fontSize: 14, color: Color(0xFFBDBDBD))),
             ],
           ),
         ],
@@ -198,11 +198,11 @@ class _MonitorScreenState extends State<MonitorScreen> {
     final t = localeService.t;
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppTheme.cardBackground, borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withOpacity(0.1))),
+      decoration: BoxDecoration(color: AppTheme.cardBackground, borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFFFFFFFF).withOpacity(0.1))),
       child: Row(
         children: [
           Expanded(child: _buildInfoItem(t('Battery Capacity'), '${_upsData['batteryPercent']}%', Icons.battery_charging_full, AppTheme.successColor)),
-          Container(width: 1, height: 60, color: Colors.white24),
+          Container(width: 1, height: 60, color: const Color(0x3DFFFFFF)),
           Expanded(child: _buildInfoItem(t('Temperature'), '${_upsData['temperature']}°C', Icons.thermostat, _upsData['temperature'] > 40 ? AppTheme.warningColor : AppTheme.cyanGlow)),
         ],
       ),
@@ -215,7 +215,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
         Icon(icon, color: color, size: 24),
         const SizedBox(height: 8),
         Text(value, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: color)),
-        Text(label, style: const TextStyle(fontSize: 11, color: Colors.white54)),
+        Text(label, style: const TextStyle(fontSize: 11, color: Color(0xFFBDBDBD))),
       ],
     );
   }
@@ -224,7 +224,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
     final t = localeService.t;
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppTheme.cardBackground, borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withOpacity(0.1))),
+      decoration: BoxDecoration(color: AppTheme.cardBackground, borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFFFFFFFF).withOpacity(0.1))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -232,7 +232,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
             children: [
               Icon(Icons.electric_bolt, color: AppTheme.orangeAccent, size: 20),
               const SizedBox(width: 8),
-              Text(t('Load Status'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+              Text(t('Load Status'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFFFFFFFF))),
               const Spacer(),
               Text('${_upsData['loadPercent']}%', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: _getLoadColor(_upsData['loadPercent']))),
             ],
@@ -243,7 +243,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
             child: LinearProgressIndicator(
               value: _upsData['loadPercent'] / 100,
               minHeight: 12,
-              backgroundColor: Colors.white12,
+              backgroundColor: const Color(0x1FFFFFFF),
               valueColor: AlwaysStoppedAnimation<Color>(_getLoadColor(_upsData['loadPercent'])),
             ),
           ),
@@ -251,9 +251,9 @@ class _MonitorScreenState extends State<MonitorScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [
-              Text('0%', style: TextStyle(fontSize: 10, color: Colors.white38)),
-              Text('50%', style: TextStyle(fontSize: 10, color: Colors.white38)),
-              Text('100%', style: TextStyle(fontSize: 10, color: Colors.white38)),
+              Text('0%', style: TextStyle(fontSize: 10, color: Color(0xFF616161))),
+              Text('50%', style: TextStyle(fontSize: 10, color: Color(0xFF616161))),
+              Text('100%', style: TextStyle(fontSize: 10, color: Color(0xFF616161))),
             ],
           ),
         ],
@@ -274,7 +274,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 4, bottom: 12),
-          child: Text(t('Quick Actions'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+          child: Text(t('Quick Actions'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFFFFFFFF))),
         ),
         Row(
           children: [
@@ -317,7 +317,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
     final t = localeService.t;
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(color: AppTheme.cardBackground, borderRadius: BorderRadius.circular(16), border: Border.all(color: Colors.white.withOpacity(0.1))),
+      decoration: BoxDecoration(color: AppTheme.cardBackground, borderRadius: BorderRadius.circular(16), border: Border.all(color: const Color(0xFFFFFFFF).withOpacity(0.1))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -325,7 +325,7 @@ class _MonitorScreenState extends State<MonitorScreen> {
             children: [
               Icon(Icons.history, color: AppTheme.primaryLightColor, size: 20),
               const SizedBox(width: 8),
-              Text(t('Recent Events'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+              Text(t('Recent Events'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFFFFFFFF))),
             ],
           ),
           const SizedBox(height: 12),
@@ -352,8 +352,8 @@ class _MonitorScreenState extends State<MonitorScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(event, style: const TextStyle(fontSize: 14, color: Colors.white)),
-                Text(time, style: const TextStyle(fontSize: 11, color: Colors.white38)),
+                Text(event, style: const TextStyle(fontSize: 14, color: Color(0xFFFFFFFF))),
+                Text(time, style: const TextStyle(fontSize: 11, color: Color(0xFF616161))),
               ],
             ),
           ),

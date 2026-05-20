@@ -54,10 +54,10 @@ class _MainScreenState extends State<MainScreen> {
       body: _pages[_currentIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFFFFFFFF),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: const Color(0xFF000000).withOpacity(0.08),
               blurRadius: 20,
               offset: const Offset(0, -5),
             ),

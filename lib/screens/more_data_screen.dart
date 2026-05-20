@@ -13,7 +13,7 @@ class MoreDataScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFFFFFFF),
         elevation: 0,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
@@ -44,9 +44,9 @@ class MoreDataScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFFFFFFFF),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.06), blurRadius: 10, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: const Color(0xFF000000).withOpacity(0.06), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

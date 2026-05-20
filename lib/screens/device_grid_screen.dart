@@ -45,7 +45,7 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFFFFFF),
       body: SafeArea(
         child: Column(
           children: [
@@ -65,7 +65,7 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: Color(0xFFFFFFFF),
         border: Border(bottom: BorderSide(color: Color(0xFFE0E0E0))),
       ),
       child: Row(
@@ -98,7 +98,7 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
                 color: const Color(0xFF4A90D9),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.add, color: Colors.white),
+              child: const Icon(Icons.add, color: Color(0xFFFFFFFF)),
             ),
           ),
         ],
@@ -156,11 +156,11 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: const Color(0xFFFFFFFF),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.06),
+              color: const Color(0xFF000000).withOpacity(0.06),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -241,7 +241,7 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
       builder: (ctx) => Container(
         height: MediaQuery.of(ctx).size.height * 0.7,
         decoration: const BoxDecoration(
-          color: Colors.white,
+          color: Color(0xFFFFFFFF),
           borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         ),
         child: Column(

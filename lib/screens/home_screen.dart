@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
           bottomNavigationBar: Container(
             decoration: BoxDecoration(
               color: AppTheme.surfaceColor,
-              boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, -5))],
+              boxShadow: [BoxShadow(color: const Color(0xFF000000).withOpacity(0.3), blurRadius: 10, offset: const Offset(0, -5))],
             ),
             child: SafeArea(
               child: Padding(
@@ -125,9 +125,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: isSelected ? AppTheme.primaryColor : Colors.white54, size: 24),
+            Icon(icon, color: isSelected ? AppTheme.primaryColor : const Color(0xFFBDBDBD), size: 24),
             const SizedBox(height: 4),
-            Text(label, style: TextStyle(fontSize: 12, color: isSelected ? AppTheme.primaryColor : Colors.white54, fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal)),
+            Text(label, style: TextStyle(fontSize: 12, color: isSelected ? AppTheme.primaryColor : const Color(0xFFBDBDBD), fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal)),
           ],
         ),
       ),
@@ -168,14 +168,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(gradient: AppTheme.brandGradient, borderRadius: BorderRadius.circular(12)),
-                            child: const Icon(Icons.bolt, color: Colors.white, size: 24),
+                            child: const Icon(Icons.bolt, color: Color(0xFFFFFFFF), size: 24),
                           ),
                           const SizedBox(width: 12),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text('MARSRIVA', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.primaryLightColor, letterSpacing: 2)),
-                              Text(t('Keep Life Power On'), style: const TextStyle(fontSize: 12, color: Colors.white70)),
+                              Text(t('Keep Life Power On'), style: const TextStyle(fontSize: 12, color: Color(0xFFB0BEC5))),
                             ],
                           ),
                         ],
@@ -183,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 16),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(color: Colors.white.withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
+                        decoration: BoxDecoration(color: const Color(0xFFFFFFFF).withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -192,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               decoration: BoxDecoration(color: AppTheme.onlineColor, shape: BoxShape.circle, boxShadow: [BoxShadow(color: AppTheme.onlineColor.withOpacity(0.5), blurRadius: 4)]),
                             ),
                             const SizedBox(width: 8),
-                            Text('$onlineCount/${_userDevices.length} ${t('Device(s) Online')}', style: const TextStyle(fontSize: 12, color: Colors.white)),
+                            Text('$onlineCount/${_userDevices.length} ${t('Device(s) Online')}', style: const TextStyle(fontSize: 12, color: Color(0xFFFFFFFF))),
                           ],
                         ),
                       ),
@@ -208,9 +208,9 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
             child: Row(
               children: [
-                Text(t('Device Categories'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+                Text(t('Device Categories'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFFFFFFFF))),
                 const Spacer(),
-                Text('${groupedDevices.length} ${t('categories')}', style: const TextStyle(fontSize: 12, color: Colors.white54)),
+                Text('${groupedDevices.length} ${t('categories')}', style: const TextStyle(fontSize: 12, color: Color(0xFFBDBDBD))),
               ],
             ),
           ),
@@ -273,9 +273,9 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(type.displayName, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+                  Text(type.displayName, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFFFFFFFF))),
                   const SizedBox(height: 4),
-                  Text('$totalCount ${localeService.t('devices')}', style: const TextStyle(fontSize: 12, color: Colors.white54)),
+                  Text('$totalCount ${localeService.t('devices')}', style: const TextStyle(fontSize: 12, color: Color(0xFFBDBDBD))),
                 ],
               ),
             ),
@@ -295,7 +295,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Icon(Icons.chevron_right, color: Colors.white38),
+                const Icon(Icons.chevron_right, color: Color(0xFF616161)),
               ],
             ),
           ],
@@ -316,7 +316,7 @@ class _HomeScreenState extends State<HomeScreen> {
         SliverAppBar(
           pinned: true,
           backgroundColor: AppTheme.surfaceColor,
-          title: Text(localeService.t('Event Log'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+          title: Text(localeService.t('Event Log'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFFFFFFFF))),
         ),
         SliverPadding(
           padding: const EdgeInsets.all(16),
@@ -360,9 +360,9 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(localeService.t(event['event']), style: const TextStyle(fontSize: 14, color: Colors.white)),
+                Text(localeService.t(event['event']), style: const TextStyle(fontSize: 14, color: Color(0xFFFFFFFF))),
                 const SizedBox(height: 4),
-                Text('${event['date']} ${event['time']}', style: const TextStyle(fontSize: 11, color: Colors.white38)),
+                Text('${event['date']} ${event['time']}', style: const TextStyle(fontSize: 11, color: Color(0xFF616161))),
               ],
             ),
           ),
@@ -378,7 +378,7 @@ class _HomeScreenState extends State<HomeScreen> {
         SliverAppBar(
           pinned: true,
           backgroundColor: AppTheme.surfaceColor,
-          title: Text(t('Settings'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white)),
+          title: Text(t('Settings'), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFFFFFFFF))),
         ),
         SliverToBoxAdapter(
           child: Padding(
@@ -402,9 +402,9 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(color: AppTheme.cardBackground, borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         leading: Icon(icon, color: AppTheme.primaryColor),
-        title: Text(title, style: const TextStyle(color: Colors.white)),
-        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12, color: Colors.white54)),
-        trailing: const Icon(Icons.chevron_right, color: Colors.white38),
+        title: Text(title, style: const TextStyle(color: Color(0xFFFFFFFF))),
+        subtitle: Text(subtitle, style: const TextStyle(fontSize: 12, color: Color(0xFFBDBDBD))),
+        trailing: const Icon(Icons.chevron_right, color: Color(0xFF616161)),
         onTap: onTap,
       ),
     );
@@ -416,12 +416,12 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (dialogContext) => AlertDialog(
         backgroundColor: AppTheme.surfaceColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(localeService.t('Language'), style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: Text(localeService.t('Language'), style: const TextStyle(color: Color(0xFFFFFFFF), fontWeight: FontWeight.bold)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ListTile(title: const Text('English', style: TextStyle(color: Colors.white)), onTap: () => Navigator.pop(dialogContext)),
-            ListTile(title: const Text('中文', style: TextStyle(color: Colors.white)), onTap: () => Navigator.pop(dialogContext)),
+            ListTile(title: const Text('English', style: TextStyle(color: Color(0xFFFFFFFF))), onTap: () => Navigator.pop(dialogContext)),
+            ListTile(title: const Text('中文', style: TextStyle(color: Color(0xFFFFFFFF))), onTap: () => Navigator.pop(dialogContext)),
           ],
         ),
       ),
