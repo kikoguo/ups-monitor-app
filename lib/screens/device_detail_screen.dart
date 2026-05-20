@@ -272,29 +272,15 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final params = DeviceParameterConfig.getParameters(_device.type.code);
-    final mainParams = params.where((p) => p.isMain).toList();
-    final otherParams = params.where((p) => !p.isMain).take(6).toList();
-
-    // 如果主参数列表为空，至少显示一些默认参数
-    final displayMainParams = mainParams.isNotEmpty 
-        ? mainParams 
-        : params.take(4).toList();
-    final displayOtherParams = otherParams.isNotEmpty 
-        ? otherParams 
-        : params.skip(4).take(6).toList();
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _buildErrorView(),
+        child: _buildContent(),
       ),
     );
   }
 
-  Widget _buildErrorView() {
+  Widget _buildContent() {
     final params = DeviceParameterConfig.getParameters(_device.type.code);
     final mainParams = params.where((p) => p.isMain).toList();
     final otherParams = params.where((p) => !p.isMain).take(6).toList();
@@ -314,11 +300,20 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
         _buildDeviceInfoCard(),
         _buildModeSelector(),
         if (_loadError != null) _buildErrorBanner(),
-        _buildMainParameters(displayMainParams),
-        _buildMoreDataButton(),
-        _buildOtherParameters(displayOtherParams),
-        if (_device.alarms.isNotEmpty) _buildAlarmSection(),
-        _buildControlButtons(),
+        if (_isLoading)
+          const SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.all(32),
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          )
+        else ...[
+          _buildMainParameters(displayMainParams),
+          _buildMoreDataButton(),
+          _buildOtherParameters(displayOtherParams),
+          if (_device.alarms.isNotEmpty) _buildAlarmSection(),
+          _buildControlButtons(),
+        ],
         const SliverToBoxAdapter(child: SizedBox(height: 32)),
       ],
     );
