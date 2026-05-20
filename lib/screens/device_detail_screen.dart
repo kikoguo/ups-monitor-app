@@ -467,9 +467,9 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: isActive ? mode.color.withOpacity(0.15) : Colors.grey[100],
+                        color: isActive ? mode.color.withOpacity(0.15) : const Color(0xFFF5F5F5),
                         shape: BoxShape.circle,
-                        border: isActive ? Border.all(color: mode.color, width: 2) : null,
+                        border: isActive ? Border.all(color: mode.color, width: 2) : Border.all(color: const Color(0xFFE0E0E0), width: 1),
                       ),
                       child: Icon(mode.icon, color: isActive ? mode.color : const Color(0xFF9E9E9E), size: 24),
                     ),
