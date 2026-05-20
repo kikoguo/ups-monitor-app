@@ -13,11 +13,15 @@ class DeviceDetailScreen extends StatefulWidget {
   State<DeviceDetailScreen> createState() => _DeviceDetailScreenState();
 }
 
+enum ConnectionType { wifi, bluetooth }
+
 class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   final RemoteService _remoteService = RemoteService();
   late SmartDevice _device;
   Map<String, dynamic> _realtimeData = {};
   bool _isLoading = true;
+  bool _isConnecting = false;
+  String? _connectionError;
 
   @override
   void initState() {
@@ -37,6 +41,222 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
     }
   }
 
+  Future<void> _connectDevice(ConnectionType type) async {
+    setState(() {
+      _isConnecting = true;
+      _connectionError = null;
+    });
+
+    // 模拟连接过程
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (mounted) {
+      setState(() {
+        _isConnecting = false;
+        // 假设连接成功
+        _device = SmartDevice(
+          id: _device.id,
+          name: _device.name,
+          type: _device.type,
+          localIp: _device.localIp,
+          isOnline: true,
+          lastSeen: DateTime.now(),
+        );
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(type == ConnectionType.wifi ? 'WiFi连接成功' : '蓝牙连接成功'),
+          backgroundColor: const Color(0xFF52C41A),
+        ),
+      );
+    }
+  }
+
+  void _showConnectionDialog() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) => Container(
+        padding: const EdgeInsets.all(24),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 20),
+            const Text(
+              '连接设备',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF1A1A2E)),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '请选择连接方式：${_device.localIp}',
+              style: const TextStyle(fontSize: 14, color: Colors.grey),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _connectDevice(ConnectionType.wifi);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF4A90D9).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFF4A90D9).withOpacity(0.3)),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(Icons.wifi, color: const Color(0xFF4A90D9), size: 40),
+                          const SizedBox(height: 12),
+                          const Text(
+                            'WiFi 连接',
+                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF4A90D9)),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _device.localIp ?? '未设置',
+                            style: const TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pop(ctx);
+                      _connectDevice(ConnectionType.bluetooth);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF722ED1).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: const Color(0xFF722ED1).withOpacity(0.3)),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(Icons.bluetooth, color: const Color(0xFF722ED1), size: 40),
+                          const SizedBox(height: 12),
+                          const Text(
+                            '蓝牙连接',
+                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(0xFF722ED1)),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text(
+                            '搜索中...',
+                            style: TextStyle(fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildConnectionBanner() {
+    if (_isConnecting) {
+      return Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        color: const Color(0xFF4A90D9).withOpacity(0.1),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF4A90D9)),
+            ),
+            SizedBox(width: 12),
+            Text('正在连接...', style: TextStyle(fontSize: 14, color: Color(0xFF4A90D9))),
+          ],
+        ),
+      );
+    }
+
+    if (!_device.isOnline) {
+      return GestureDetector(
+        onTap: _showConnectionDialog,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          color: const Color(0xFFFF4D4F).withOpacity(0.1),
+          child: Row(
+            children: [
+              const Icon(Icons.wifi_off, color: Color(0xFFFF4D4F), size: 20),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Text(
+                  '设备未连接，点击连接',
+                  style: TextStyle(fontSize: 14, color: Color(0xFFFF4D4F)),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFF4D4F),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Text(
+                  '连接',
+                  style: TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w500),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      color: const Color(0xFF52C41A).withOpacity(0.1),
+      child: Row(
+        children: [
+          const Icon(Icons.wifi, color: Color(0xFF52C41A), size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              '已连接 ${_device.localIp}',
+              style: const TextStyle(fontSize: 14, color: Color(0xFF52C41A)),
+            ),
+          ),
+          GestureDetector(
+            onTap: _showConnectionDialog,
+            child: const Text(
+              '切换',
+              style: TextStyle(fontSize: 14, color: Color(0xFF4A90D9), fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final params = DeviceParameterConfig.getParameters(_device.type.code);
@@ -44,12 +264,13 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
     final otherParams = params.where((p) => !p.isMain).take(6).toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : CustomScrollView(
                 slivers: [
+                  _buildConnectionBanner(),
                   _buildAppBar(),
                   _buildDeviceInfoCard(),
                   _buildModeSelector(),
