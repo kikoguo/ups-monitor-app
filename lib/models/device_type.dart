@@ -33,7 +33,7 @@ enum DeviceMode {
   gridConnected('grid_connected', '并网', Icons.electrical_services, Color(0xFF4A90D9)),
   offGrid('off_grid', '离网', Icons.offline_bolt, Color(0xFF722ED1)),
   online('online', '在线', Icons.check_circle, Color(0xFF52C41A)),
-  offline('offline', '离线', Icons.error_outline, Colors.red);
+  offline('offline', '离线', Icons.error_outline, Color(0xFFF44336));
 
   final String code;
   final String displayName;

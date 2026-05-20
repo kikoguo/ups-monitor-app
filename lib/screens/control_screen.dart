@@ -135,7 +135,7 @@ class _ControlScreenState extends State<ControlScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.green,
+        backgroundColor: const Color(0xFF4CAF50),
       ),
     );
   }
@@ -144,7 +144,7 @@ class _ControlScreenState extends State<ControlScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: Colors.red,
+        backgroundColor: const Color(0xFFF44336),
       ),
     );
   }
@@ -235,25 +235,25 @@ class _ControlScreenState extends State<ControlScreen> {
                       _buildControlButton(
                         icon: Icons.power_settings_new,
                         label: t('Shutdown'),
-                        color: Colors.red,
+                        color: const Color(0xFFF44336),
                         onPressed: _shutdown,
                       ),
                       _buildControlButton(
                         icon: Icons.refresh,
                         label: t('Restart'),
-                        color: Colors.orange,
+                        color: const Color(0xFFFF9800),
                         onPressed: _restart,
                       ),
                       _buildControlButton(
                         icon: Icons.health_and_safety,
                         label: t('Self-Test'),
-                        color: Colors.blue,
+                        color: const Color(0xFF2196F3),
                         onPressed: _test,
                       ),
                       _buildControlButton(
                         icon: Icons.electrical_services,
                         label: t('Bypass Mode'),
-                        color: Colors.purple,
+                        color: const Color(0xFF9C27B0),
                         onPressed: _bypass,
                       ),
                     ],
@@ -285,7 +285,7 @@ class _ControlScreenState extends State<ControlScreen> {
                         child: _buildControlButton(
                           icon: Icons.volume_up,
                           label: t('Unmute'),
-                          color: Colors.teal,
+                          color: const Color(0xFF009688),
                           onPressed: _unmute,
                         ),
                       ),
@@ -295,21 +295,21 @@ class _ControlScreenState extends State<ControlScreen> {
 
                   // 提示信息
                   Card(
-                    color: Colors.amber[50],
+                    color: const Color(0xFFFFF8E1),
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Row(
                         children: [
                           Icon(
                             Icons.info_outline,
-                            color: Colors.amber[700],
+                            color: const Color(0xFFFFA000),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
                               t('Control command may take a few seconds to take effect, please be patient.'),
                               style: TextStyle(
-                                color: Colors.amber[900],
+                                color: const Color(0xFFFF6F00),
                                 fontSize: 14,
                               ),
                             ),
