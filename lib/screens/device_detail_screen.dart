@@ -529,7 +529,19 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
       case 'battery': iconData = Icons.battery_full; iconColor = const Color(0xFF52C41A); break;
       case 'power': iconData = Icons.electric_bolt; iconColor = const Color(0xFFFAAD14); break;
       case 'voltage': iconData = Icons.electrical_services; iconColor = const Color(0xFF4A90D9); break;
+      case 'current': iconData = Icons.electric_meter; iconColor = const Color(0xFF4A90D9); break;
       case 'solar': iconData = Icons.wb_sunny; iconColor = const Color(0xFFFADB14); break;
+      case 'temperature': iconData = Icons.thermostat; iconColor = const Color(0xFFFF4D4F); break;
+      case 'frequency': iconData = Icons.speed; iconColor = const Color(0xFF4A90D9); break;
+      case 'load': iconData = Icons.fitness_center; iconColor = const Color(0xFFFAAD14); break;
+      case 'time': iconData = Icons.timer; iconColor = const Color(0xFF4A90D9); break;
+      case 'health': iconData = Icons.favorite; iconColor = const Color(0xFF52C41A); break;
+      case 'cycle': iconData = Icons.repeat; iconColor = const Color(0xFF4A90D9); break;
+      case 'humidity': iconData = Icons.water_drop; iconColor = const Color(0xFF4A90D9); break;
+      case 'energy': iconData = Icons.bolt; iconColor = const Color(0xFFFAAD14); break;
+      case 'switch': iconData = Icons.toggle_on; iconColor = const Color(0xFF52C41A); break;
+      case 'sun': iconData = Icons.wb_sunny; iconColor = const Color(0xFFFADB14); break;
+      case 'efficiency': iconData = Icons.percent; iconColor = const Color(0xFF52C41A); break;
       default: iconData = Icons.speed; iconColor = const Color(0xFF4A90D9);
     }
     return Icon(iconData, color: iconColor, size: 24);
@@ -608,6 +620,9 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   }
 
   Widget _buildAlarmSection() {
+    if (_device.alarms.isEmpty) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
     return SliverToBoxAdapter(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -621,11 +636,11 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
                 Container(
                   width: 48, height: 48,
                   decoration: BoxDecoration(color: const Color(0xFFFF4D4F).withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
-                  child: const Center(child: Text('2', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFFFF4D4F)))),
+                  child: Center(child: Text('${_device.alarms.length}', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFFFF4D4F)))),
                 ),
                 const SizedBox(width: 12),
                 Expanded(child: _buildAlarmCard(_device.alarms[0])),
-                const SizedBox(width: 12),
+                if (_device.alarms.length > 1) const SizedBox(width: 12),
                 if (_device.alarms.length > 1) Expanded(child: _buildAlarmCard(_device.alarms[1])),
               ],
             ),
