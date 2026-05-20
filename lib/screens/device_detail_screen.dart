@@ -32,30 +32,13 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
     if (_device.parameters == null) {
       _device = _device.copyWith(parameters: {});
     }
-    _loadRealtimeData();
+    // 立即完成加载（不再进行网络请求）
+    _isLoading = false;
   }
 
   Future<void> _loadRealtimeData() async {
-    setState(() {
-      _isLoading = true;
-      _loadError = null;
-    });
-    try {
-      final data = await _remoteService.getDeviceRealtimeData(_device.id, 'demo_token');
-      if (mounted) {
-        setState(() {
-          _realtimeData = data;
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _loadError = e.toString();
-          _isLoading = false;
-        });
-      }
-    }
+    // Web 环境暂时跳过网络请求，直接使用本地数据
+    // 如果需要，可以在这里添加定时刷新逻辑
   }
 
   Future<void> _connectDevice(ConnectionType type) async {
@@ -285,17 +268,22 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   }
 
   Widget _buildContent() {
-    final params = DeviceParameterConfig.getParameters(_device.type.code);
-    final mainParams = params.where((p) => p.isMain).toList();
-    final otherParams = params.where((p) => !p.isMain).take(6).toList();
+    // 获取设备类型代码，确保不为空
+    final String typeCode = _device.type.code.isNotEmpty ? _device.type.code : 'general';
+    final params = DeviceParameterConfig.getParameters(typeCode);
+    
+    // 获取主参数和次要参数
+    List<DeviceParameter> mainParams = params.where((p) => p.isMain).toList();
+    List<DeviceParameter> otherParams = params.where((p) => !p.isMain).take(6).toList();
 
-    // 如果主参数列表为空，至少显示一些默认参数
-    final displayMainParams = mainParams.isNotEmpty 
-        ? mainParams 
-        : params.take(4).toList();
-    final displayOtherParams = otherParams.isNotEmpty 
-        ? otherParams 
-        : params.skip(4).take(6).toList();
+    // 如果主参数列表为空，使用前4个参数
+    if (mainParams.isEmpty) {
+      mainParams = params.take(4).toList();
+    }
+    // 如果次要参数列表为空，使用剩余参数
+    if (otherParams.isEmpty) {
+      otherParams = params.skip(4).take(6).toList();
+    }
 
     return CustomScrollView(
       slivers: [
@@ -312,9 +300,9 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
             ),
           )
         else ...[
-          _buildMainParameters(displayMainParams),
+          _buildMainParameters(mainParams),
           _buildMoreDataButton(),
-          _buildOtherParameters(displayOtherParams),
+          _buildOtherParameters(otherParams),
           if (_device.alarms.isNotEmpty) _buildAlarmSection(),
           _buildControlButtons(),
         ],
