@@ -28,6 +28,10 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   void initState() {
     super.initState();
     _device = widget.device;
+    // 确保设备参数不为 null
+    if (_device.parameters == null) {
+      _device = _device.copyWith(parameters: {});
+    }
     _loadRealtimeData();
   }
 
