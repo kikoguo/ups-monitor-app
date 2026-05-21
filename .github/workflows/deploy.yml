@@ -43,8 +43,17 @@ jobs:
         run: |
           # Remove empty build objects from buildConfig
           sed -i 's/,{}]/]/g' build/web/flutter_bootstrap.js
-          # Disable service worker registration - it breaks main.dart.js loading on GitHub Pages
-          sed -i 's/serviceWorkerSettings.*$/}/' build/web/flutter_bootstrap.js
+          # Disable service worker registration using Python (sed can't handle multiline)
+          python3 -c "
+          import re
+          with open('build/web/flutter_bootstrap.js', 'r') as f:
+              content = f.read()
+          # Replace _flutter.loader.load({...serviceWorkerSettings...}) with _flutter.loader.load({})
+          content = re.sub(r'_flutter\.loader\.load\(\{[^}]*serviceWorkerSettings[^}]*\}[^}]*\}', '_flutter.loader.load({})', content, flags=re.DOTALL)
+          with open('build/web/flutter_bootstrap.js', 'w') as f:
+              f.write(content)
+          print('Fixed flutter_bootstrap.js: removed serviceWorkerSettings')
+          "
           # Delete service worker file
           rm -f build/web/flutter_service_worker.js
       
