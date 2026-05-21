@@ -52,5 +52,22 @@
   </div>
 
   <script src="flutter_bootstrap.js"></script>
+  <script>
+    // Auto-hide loading indicator when Flutter is ready
+    var checkInterval = setInterval(function() {
+      var flutterView = document.querySelector('flt-glass-pane') || document.querySelector('flutter-view');
+      if (flutterView) {
+        var loading = document.getElementById('loading');
+        if (loading) loading.style.display = 'none';
+        clearInterval(checkInterval);
+      }
+    }, 500);
+    // Fallback: hide after 30 seconds regardless
+    setTimeout(function() {
+      var loading = document.getElementById('loading');
+      if (loading) loading.style.display = 'none';
+      clearInterval(checkInterval);
+    }, 30000);
+  </script>
 </body>
 </html>
