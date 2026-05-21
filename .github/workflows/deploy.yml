@@ -39,10 +39,14 @@ jobs:
       - name: Build Web
         run: flutter build web --release --base-href /ups-monitor-app/ --no-wasm-dry-run
       
-      - name: Fix flutter_bootstrap.js
+      - name: Fix flutter_bootstrap.js and remove service worker
         run: |
-          # Remove empty build objects from buildConfig that cause Flutter initialization to fail
+          # Remove empty build objects from buildConfig
           sed -i 's/,{}]/]/g' build/web/flutter_bootstrap.js
+          # Disable service worker registration - it breaks main.dart.js loading on GitHub Pages
+          sed -i 's/serviceWorkerSettings.*$/}/' build/web/flutter_bootstrap.js
+          # Delete service worker file
+          rm -f build/web/flutter_service_worker.js
       
       - name: Verify build
         run: |
@@ -52,6 +56,8 @@ jobs:
           grep "buildConfig" build/web/flutter_bootstrap.js
           echo "=== Checking main.dart.js size ==="
           ls -la build/web/main.dart.js
+          echo "=== Service worker file should not exist ==="
+          ls build/web/flutter_service_worker.js 2>&1 || echo "GOOD: service worker file removed"
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

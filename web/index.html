@@ -53,6 +53,21 @@
 
   <script src="flutter_bootstrap.js"></script>
   <script>
+    // Unregister old service workers that break main.dart.js loading
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (var i = 0; i < registrations.length; i++) {
+          registrations[i].unregister();
+          console.log('Unregistered old service worker');
+        }
+      });
+      // Also clear caches
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          for (var i = 0; i < names.length; i++) caches.delete(names[i]);
+        });
+      }
+    }
     // Auto-hide loading indicator when Flutter is ready
     var checkInterval = setInterval(function() {
       var flutterView = document.querySelector('flt-glass-pane') || document.querySelector('flutter-view');
