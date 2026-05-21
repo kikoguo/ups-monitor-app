@@ -37,7 +37,21 @@ jobs:
         run: flutter pub get
       
       - name: Build Web
-        run: flutter build web --release --base-href /ups-monitor-app/
+        run: flutter build web --release --base-href /ups-monitor-app/ --no-wasm-dry-run
+      
+      - name: Fix flutter_bootstrap.js
+        run: |
+          # Remove empty build objects from buildConfig that cause Flutter initialization to fail
+          sed -i 's/,{}]/]/g' build/web/flutter_bootstrap.js
+      
+      - name: Verify build
+        run: |
+          echo "=== Checking index.html base href ==="
+          grep "base href" build/web/index.html
+          echo "=== Checking flutter_bootstrap.js buildConfig ==="
+          grep "buildConfig" build/web/flutter_bootstrap.js
+          echo "=== Checking main.dart.js size ==="
+          ls -la build/web/main.dart.js
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
