@@ -51,23 +51,27 @@
     <div>加载中...</div>
   </div>
 
-  <script src="flutter_bootstrap.js"></script>
   <script>
-    // Unregister old service workers that break main.dart.js loading
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for (var i = 0; i < registrations.length; i++) {
-          registrations[i].unregister();
-          console.log('Unregistered old service worker');
-        }
-      });
-      // Also clear caches
-      if ('caches' in window) {
-        caches.keys().then(function(names) {
-          for (var i = 0; i < names.length; i++) caches.delete(names[i]);
+    // CRITICAL: Unregister old service workers BEFORE loading Flutter
+    // Old SW intercepts main.dart.js and returns broken response
+    (function() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          regs.forEach(function(reg) {
+            reg.unregister();
+            console.log('Unregistered service worker: ' + reg.scope);
+          });
         });
       }
-    }
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          names.forEach(function(name) { caches.delete(name); });
+        });
+      }
+    })();
+  </script>
+  <script src="flutter_bootstrap.js"></script>
+  <script>
     // Auto-hide loading indicator when Flutter is ready
     var checkInterval = setInterval(function() {
       var flutterView = document.querySelector('flt-glass-pane') || document.querySelector('flutter-view');

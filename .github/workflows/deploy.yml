@@ -41,21 +41,21 @@ jobs:
       
       - name: Fix flutter_bootstrap.js and remove service worker
         run: |
-          # Use node.js to fix flutter_bootstrap.js reliably
           node -e "
           const fs = require('fs');
           let content = fs.readFileSync('build/web/flutter_bootstrap.js', 'utf8');
           // Remove empty build objects from buildConfig
           content = content.replace(/,\{\}\]/g, ']');
-          // Find and replace the _flutter.loader.load({...}) call at the end
-          // The pattern is: _flutter.loader.load({ ... serviceWorkerSettings: { ... } ... })
+          // Remove the entire load() call and replace with clean version
           const loadMatch = content.match(/_flutter\.loader\.load\(\{[\s\S]*\}\)/);
           if (loadMatch) {
             content = content.replace(loadMatch[0], '_flutter.loader.load({})');
             console.log('Replaced load() call');
-          } else {
-            console.log('WARNING: Could not find load() call pattern');
           }
+          // Also remove the service worker class definition entirely to prevent any SW registration
+          // The class 'g' in flutter_bootstrap.js handles SW - remove its instantiation
+          // Replace any navigator.serviceWorker.register calls with no-ops
+          content = content.replace(/navigator\.serviceWorker\.register\([^)]*\)/g, 'Promise.resolve()');
           fs.writeFileSync('build/web/flutter_bootstrap.js', content);
           console.log('Fixed flutter_bootstrap.js');
           "
