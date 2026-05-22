@@ -248,10 +248,28 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Widget content;
+    try {
+      content = _buildContent();
+    } catch (e, stack) {
+      debugPrint('=== BUILD ERROR in DeviceDetailScreen ===');
+      debugPrint('Error: $e');
+      debugPrint('Error type: ${e.runtimeType}');
+      debugPrint('Stack: $stack');
+      content = Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text(
+            'Build Error:\n$e\n\nType: ${e.runtimeType}\n\nStack:\n${stack.toString().substring(0, 500)}',
+            style: const TextStyle(fontSize: 12, color: Colors.red),
+          ),
+        ),
+      );
+    }
     return Scaffold(
       backgroundColor: const Color(0xFFFFFFFF),
       body: SafeArea(
-        child: _buildContent(),
+        child: content,
       ),
     );
   }

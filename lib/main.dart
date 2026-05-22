@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ups_monitor_app/app.dart';
@@ -7,24 +8,41 @@ import 'package:ups_monitor_app/services/locale_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // 初始化语言服务（不阻塞）
-  final localeService = LocaleService();
-  await localeService.init();
+  // 捕获所有 Flutter 框架错误
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+    debugPrint('=== FLUTTER ERROR ===');
+    debugPrint('Exception: ${details.exception}');
+    debugPrint('Exception type: ${details.exception.runtimeType}');
+    debugPrint('Stack trace: ${details.stack}');
+  };
   
-  // 初始化存储服务（不阻塞主线程）
-  final storageService = StorageService();
-  // 在后台初始化
-  () async {
-    await storageService.init();
-  }();
+  // 捕获所有未处理的异步错误
+  runZonedGuarded(() async {
+    // 初始化语言服务（不阻塞）
+    final localeService = LocaleService();
+    await localeService.init();
 
-  runApp(
-    MultiProvider(
-      providers: [
-        Provider<StorageService>.value(value: storageService),
-        ChangeNotifierProvider<LocaleService>.value(value: localeService),
-      ],
-      child: const UPSMonitorApp(),
-    ),
-  );
+    // 初始化存储服务（不阻塞主线程）
+    final storageService = StorageService();
+    // 在后台初始化
+    () async {
+      await storageService.init();
+    }();
+
+    runApp(
+      MultiProvider(
+        providers: [
+          Provider<StorageService>.value(value: storageService),
+          ChangeNotifierProvider<LocaleService>.value(value: localeService),
+        ],
+        child: const UPSMonitorApp(),
+      ),
+    );
+  }, (error, stack) {
+    debugPrint('=== ASYNC ERROR ===');
+    debugPrint('Error: $error');
+    debugPrint('Error type: ${error.runtimeType}');
+    debugPrint('Stack: $stack');
+  });
 }
