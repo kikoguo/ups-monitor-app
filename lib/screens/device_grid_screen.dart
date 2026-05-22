@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../models/smart_device.dart';
 import '../models/device_type.dart';
 import '../services/remote_service.dart';
+import '../services/storage_service.dart';
 import 'device_detail_screen.dart';
 
 /// 设备网格首页 - 类似轻快云风格
@@ -26,12 +28,31 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
 
   Future<void> _loadDevices() async {
     setState(() => _isLoading = true);
-    final devices = await _remoteService.getDevices('demo_token');
+    // 先从本地存储加载已保存的设备
+    final storageService = context.read<StorageService>();
+    final savedDevices = await storageService.loadSmartDevices();
     if (mounted) {
       setState(() {
-        _devices = devices;
+        _devices = savedDevices;
         _isLoading = false;
       });
+    }
+    // 再尝试从远程获取更新
+    try {
+      final devices = await _remoteService.getDevices('demo_token');
+      if (mounted && devices.isNotEmpty) {
+        // 合并远程设备（不覆盖已有的自定义设备）
+        final existingIds = _devices.map((d) => d.id).toSet();
+        final newDevices = devices.where((d) => !existingIds.contains(d.id)).toList();
+        if (newDevices.isNotEmpty) {
+          setState(() {
+            _devices = [..._devices, ...newDevices];
+          });
+          await storageService.saveSmartDevices(_devices);
+        }
+      }
+    } catch (_) {
+      // 远程加载失败不影响本地数据显示
     }
   }
 
@@ -369,6 +390,10 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
               setState(() {
                 _devices.add(newDevice);
               });
+
+              // 持久化保存到本地存储
+              final storageService = context.read<StorageService>();
+              await storageService.saveSmartDevices(_devices);
 
               if (mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(

@@ -4,6 +4,7 @@ import '../models/device_type.dart';
 import '../models/device_parameters.dart';
 import '../services/remote_service.dart';
 import 'more_data_screen.dart';
+import 'device_settings_screen.dart';
 
 class DeviceDetailScreen extends StatefulWidget {
   final SmartDevice device;
@@ -710,7 +711,14 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
     );
   }
 
-  void _showSettings() {}
+  void _showSettings() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DeviceSettingsScreen(device: _device),
+      ),
+    );
+  }
 
   @override
   void dispose() {

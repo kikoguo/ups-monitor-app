@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ups_monitor_app/models/device_info.dart';
 import 'package:ups_monitor_app/models/ups_status.dart';
+import 'package:ups_monitor_app/models/smart_device.dart';
 
 /// 本地存储服务
 class StorageService {
@@ -12,6 +13,7 @@ class StorageService {
   static const String _devicesKey = 'devices';
   static const String _settingsKey = 'settings';
   static const String _historyKey = 'history';
+  static const String _smartDevicesKey = 'smart_devices';
 
   /// 初始化
   Future<void> init() async {
@@ -72,6 +74,28 @@ class StorageService {
 
     devices[index] = device;
     return await saveDevices(devices);
+  }
+
+  /// 保存SmartDevice设备列表
+  Future<bool> saveSmartDevices(List<SmartDevice> devices) async {
+    if (_prefs == null) await init();
+    final jsonList = devices.map((d) => d.toJson()).toList();
+    return await _prefs!.setString(_smartDevicesKey, jsonEncode(jsonList));
+  }
+
+  /// 加载SmartDevice设备列表
+  Future<List<SmartDevice>> loadSmartDevices() async {
+    if (_prefs == null) await init();
+    final jsonString = _prefs!.getString(_smartDevicesKey);
+    if (jsonString == null) return [];
+    try {
+      final jsonList = jsonDecode(jsonString) as List<dynamic>;
+      return jsonList
+          .map((json) => SmartDevice.fromJson(Map<String, dynamic>.from(json as Map)))
+          .toList();
+    } catch (e) {
+      return [];
+    }
   }
 
   /// 保存设置

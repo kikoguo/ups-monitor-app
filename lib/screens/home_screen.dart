@@ -420,8 +420,34 @@ class _HomeScreenState extends State<HomeScreen> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ListTile(title: const Text('English', style: TextStyle(color: Color(0xFFFFFFFF))), onTap: () => Navigator.pop(dialogContext)),
-            ListTile(title: const Text('中文', style: TextStyle(color: Color(0xFFFFFFFF))), onTap: () => Navigator.pop(dialogContext)),
+            ListTile(
+              title: const Text('English', style: TextStyle(color: Color(0xFFFFFFFF))),
+              onTap: () {
+                Navigator.pop(dialogContext);
+                localeService.setLocale(const Locale('en'));
+              },
+            ),
+            ListTile(
+              title: const Text('中文', style: TextStyle(color: Color(0xFFFFFFFF))),
+              onTap: () {
+                Navigator.pop(dialogContext);
+                localeService.setLocale(const Locale('zh'));
+              },
+            ),
+            ListTile(
+              title: const Text('Español', style: TextStyle(color: Color(0xFFFFFFFF))),
+              onTap: () {
+                Navigator.pop(dialogContext);
+                localeService.setLocale(const Locale('es'));
+              },
+            ),
+            ListTile(
+              title: const Text('日本語', style: TextStyle(color: Color(0xFFFFFFFF))),
+              onTap: () {
+                Navigator.pop(dialogContext);
+                localeService.setLocale(const Locale('ja'));
+              },
+            ),
           ],
         ),
       ),
