@@ -332,78 +332,153 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
   void _showIpInputDialog(DeviceType type) {
     final ipController = TextEditingController();
     final nameController = TextEditingController();
+    final passwordController = TextEditingController();
+    ConnectionType _connectionType = ConnectionType.wifi;
 
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('添加${type.displayName}'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                labelText: '设备名称',
-                hintText: '例如：我的UPS',
-                border: OutlineInputBorder(),
-              ),
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) => AlertDialog(
+          title: Text('添加${type.displayName}'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    labelText: '设备名称',
+                    hintText: '例如：我的UPS',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // 连接方式选择
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: const Color(0xFFE0E0E0)),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(12, 8, 12, 4),
+                        child: Text('连接方式', style: TextStyle(fontSize: 12, color: Color(0xFF757575))),
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: RadioListTile<ConnectionType>(
+                              title: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.wifi, size: 18),
+                                  SizedBox(width: 4),
+                                  Text('WiFi', style: TextStyle(fontSize: 14)),
+                                ],
+                              ),
+                              value: ConnectionType.wifi,
+                              groupValue: _connectionType,
+                              onChanged: (value) => setDialogState(() => _connectionType = value!),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                              dense: true,
+                            ),
+                          ),
+                          Expanded(
+                            child: RadioListTile<ConnectionType>(
+                              title: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.bluetooth, size: 18),
+                                  SizedBox(width: 4),
+                                  Text('蓝牙', style: TextStyle(fontSize: 14)),
+                                ],
+                              ),
+                              value: ConnectionType.bluetooth,
+                              groupValue: _connectionType,
+                              onChanged: (value) => setDialogState(() => _connectionType = value!),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+                              dense: true,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: ipController,
+                  decoration: InputDecoration(
+                    labelText: _connectionType == ConnectionType.wifi ? '设备IP' : '设备MAC地址',
+                    hintText: _connectionType == ConnectionType.wifi
+                        ? '例如：192.168.1.100'
+                        : '例如：AA:BB:CC:DD:EE:FF',
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: '连接密码（可选）',
+                    hintText: '如有密码请输入',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: ipController,
-              decoration: const InputDecoration(
-                labelText: '设备IP',
-                hintText: '例如：192.168.1.100',
-                border: OutlineInputBorder(),
-              ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('取消'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final ip = ipController.text.trim();
+                final name = nameController.text.trim();
+
+                if (ip.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(_connectionType == ConnectionType.wifi ? '请输入设备IP' : '请输入设备MAC地址'),
+                    ),
+                  );
+                  return;
+                }
+
+                Navigator.pop(ctx);
+
+                final newDevice = SmartDevice(
+                  id: 'device_${DateTime.now().millisecondsSinceEpoch}',
+                  name: name.isEmpty ? type.displayName : name,
+                  type: type,
+                  localIp: ip,
+                  isOnline: true,
+                  lastSeen: DateTime.now(),
+                );
+
+                setState(() {
+                  _devices.add(newDevice);
+                });
+
+                // 持久化保存到本地存储
+                final storageService = context.read<StorageService>();
+                await storageService.saveSmartDevices(_devices);
+
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('${newDevice.name} 添加成功')),
+                  );
+                }
+              },
+              child: const Text('添加'),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('取消'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              final ip = ipController.text.trim();
-              final name = nameController.text.trim();
-
-              if (ip.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('请输入设备IP')),
-                );
-                return;
-              }
-
-              Navigator.pop(ctx);
-
-              final newDevice = SmartDevice(
-                id: 'device_${DateTime.now().millisecondsSinceEpoch}',
-                name: name.isEmpty ? type.displayName : name,
-                type: type,
-                localIp: ip,
-                isOnline: true,
-                lastSeen: DateTime.now(),
-              );
-
-              setState(() {
-                _devices.add(newDevice);
-              });
-
-              // 持久化保存到本地存储
-              final storageService = context.read<StorageService>();
-              await storageService.saveSmartDevices(_devices);
-
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('${newDevice.name} 添加成功')),
-                );
-              }
-            },
-            child: const Text('添加'),
-          ),
-        ],
       ),
     );
   }

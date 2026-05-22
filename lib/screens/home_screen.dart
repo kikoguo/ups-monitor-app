@@ -5,6 +5,7 @@ import 'package:ups_monitor_app/models/device_type.dart';
 import 'package:ups_monitor_app/models/smart_device.dart';
 import 'package:ups_monitor_app/screens/device_list_screen.dart';
 import 'package:ups_monitor_app/services/locale_service.dart';
+import 'package:ups_monitor_app/services/storage_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,9 +16,28 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
+  List<SmartDevice> _userDevices = [];
+  bool _isLoading = true;
 
-  // 模拟用户绑定的设备数据
-  final List<SmartDevice> _userDevices = [
+  @override
+  void initState() {
+    super.initState();
+    _loadDevices();
+  }
+
+  Future<void> _loadDevices() async {
+    final storageService = context.read<StorageService>();
+    final devices = await storageService.loadSmartDevices();
+    if (mounted) {
+      setState(() {
+        _userDevices = devices;
+        _isLoading = false;
+      });
+    }
+  }
+
+  // 模拟用户绑定的设备数据（作为默认数据，如果本地没有设备则显示）
+  List<SmartDevice> get _defaultDevices => [
     SmartDevice(
       id: 'ups_001',
       name: '办公室UPS',
@@ -137,15 +157,22 @@ class _HomeScreenState extends State<HomeScreen> {
   // 首页 - 设备分类
   Widget _buildCategoryPage(LocaleService localeService) {
     final t = localeService.t;
-    
+
+    // 使用本地设备，如果没有则显示默认设备
+    final displayDevices = _userDevices.isNotEmpty ? _userDevices : _defaultDevices;
+
     // 按设备类型分组统计
     final Map<DeviceType, List<SmartDevice>> groupedDevices = {};
-    for (final device in _userDevices) {
+    for (final device in displayDevices) {
       groupedDevices.putIfAbsent(device.type, () => []).add(device);
     }
 
     // 在线设备数
-    final onlineCount = _userDevices.where((d) => d.isOnline).length;
+    final onlineCount = displayDevices.where((d) => d.isOnline).length;
+
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator(color: AppTheme.primaryColor));
+    }
 
     return CustomScrollView(
       slivers: [
@@ -238,10 +265,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildCategoryCard(DeviceType type, int totalCount, int onlineCount, LocaleService localeService) {
+    final displayDevices = _userDevices.isNotEmpty ? _userDevices : _defaultDevices;
     return InkWell(
       onTap: () {
         // 进入该分类的设备列表页
-        final devices = _userDevices.where((d) => d.type == type).toList();
+        final devices = displayDevices.where((d) => d.type == type).toList();
         Navigator.push(
           context,
           MaterialPageRoute(
