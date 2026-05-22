@@ -170,78 +170,84 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
 
   Widget _buildConnectionBanner() {
     if (_isConnecting) {
-      return Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        color: const Color(0xFF4A90D9).withOpacity(0.1),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF4A90D9)),
-            ),
-            SizedBox(width: 12),
-            Text('正在连接...', style: TextStyle(fontSize: 14, color: Color(0xFF4A90D9))),
-          ],
-        ),
-      );
-    }
-
-    if (!_device.isOnline) {
-      return GestureDetector(
-        onTap: _showConnectionDialog,
+      return SliverToBoxAdapter(
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          color: const Color(0xFFFF4D4F).withOpacity(0.1),
-          child: Row(
+          color: const Color(0xFF4A90D9).withOpacity(0.1),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.wifi_off, color: Color(0xFFFF4D4F), size: 20),
-              const SizedBox(width: 12),
-              const Expanded(
-                child: Text(
-                  '设备未连接，点击连接',
-                  style: TextStyle(fontSize: 14, color: Color(0xFFFF4D4F)),
-                ),
+              SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(strokeWidth: 2, color: Color(0xFF4A90D9)),
               ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFF4D4F),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Text(
-                  '连接',
-                  style: TextStyle(fontSize: 12, color: Color(0xFFFFFFFF), fontWeight: FontWeight.w500),
-                ),
-              ),
+              SizedBox(width: 12),
+              Text('正在连接...', style: TextStyle(fontSize: 14, color: Color(0xFF4A90D9))),
             ],
           ),
         ),
       );
     }
 
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      color: const Color(0xFF52C41A).withOpacity(0.1),
-      child: Row(
-        children: [
-          const Icon(Icons.wifi, color: Color(0xFF52C41A), size: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              '已连接 ${_device.localIp}',
-              style: const TextStyle(fontSize: 14, color: Color(0xFF52C41A)),
+    if (!_device.isOnline) {
+      return SliverToBoxAdapter(
+        child: GestureDetector(
+          onTap: _showConnectionDialog,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            color: const Color(0xFFFF4D4F).withOpacity(0.1),
+            child: Row(
+              children: [
+                const Icon(Icons.wifi_off, color: Color(0xFFFF4D4F), size: 20),
+                const SizedBox(width: 12),
+                const Expanded(
+                  child: Text(
+                    '设备未连接，点击连接',
+                    style: TextStyle(fontSize: 14, color: Color(0xFFFF4D4F)),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFF4D4F),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: const Text(
+                    '连接',
+                    style: TextStyle(fontSize: 12, color: Color(0xFFFFFFFF), fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ],
             ),
           ),
-          GestureDetector(
-            onTap: _showConnectionDialog,
-            child: const Text(
-              '切换',
-              style: TextStyle(fontSize: 14, color: Color(0xFF4A90D9), fontWeight: FontWeight.w500),
+        ),
+      );
+    }
+
+    return SliverToBoxAdapter(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        color: const Color(0xFF52C41A).withOpacity(0.1),
+        child: Row(
+          children: [
+            const Icon(Icons.wifi, color: Color(0xFF52C41A), size: 20),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                '已连接 ${_device.localIp}',
+                style: const TextStyle(fontSize: 14, color: Color(0xFF52C41A)),
+              ),
             ),
-          ),
-        ],
+            GestureDetector(
+              onTap: _showConnectionDialog,
+              child: const Text(
+                '切换',
+                style: TextStyle(fontSize: 14, color: Color(0xFF4A90D9), fontWeight: FontWeight.w500),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
