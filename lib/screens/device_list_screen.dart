@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../config/theme.dart';
 import '../models/smart_device.dart';
+import '../services/storage_service.dart';
 import 'device_detail_screen.dart';
 import 'device_settings_screen.dart';
 
@@ -48,11 +50,19 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
             child: const Text('取消'),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               if (controller.text.trim().isNotEmpty) {
                 setState(() {
                   _devices[index] = _devices[index].copyWith(name: controller.text.trim());
                 });
+                // 同步更新 StorageService
+                final storageService = this.context.read<StorageService>();
+                final allDevices = await storageService.loadSmartDevices();
+                final deviceIndex = allDevices.indexWhere((d) => d.id == _devices[index].id);
+                if (deviceIndex != -1) {
+                  allDevices[deviceIndex] = _devices[index];
+                  await storageService.saveSmartDevices(allDevices);
+                }
               }
               Navigator.pop(context);
             },
@@ -181,11 +191,18 @@ class _DeviceListScreenState extends State<DeviceListScreen> {
             child: const Text('取消'),
           ),
           ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
+              final deletedDevice = _devices[index];
               setState(() {
                 _devices.removeAt(index);
               });
               Navigator.pop(context);
+
+              // 从 StorageService 中同步删除
+              final storageService = this.context.read<StorageService>();
+              final allDevices = await storageService.loadSmartDevices();
+              allDevices.removeWhere((d) => d.id == deletedDevice.id);
+              await storageService.saveSmartDevices(allDevices);
             },
             style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFF5252)),
             child: const Text('删除'),

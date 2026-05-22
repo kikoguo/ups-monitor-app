@@ -28,33 +28,73 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
 
   Future<void> _loadDevices() async {
     setState(() => _isLoading = true);
-    // 先从本地存储加载已保存的设备
-    final storageService = context.read<StorageService>();
-    final savedDevices = await storageService.loadSmartDevices();
-    if (mounted) {
-      setState(() {
-        _devices = savedDevices;
-        _isLoading = false;
-      });
-    }
-    // 再尝试从远程获取更新
+    // 首页只展示推荐/预设设备，不从用户存储加载
     try {
       final devices = await _remoteService.getDevices('demo_token');
-      if (mounted && devices.isNotEmpty) {
-        // 合并远程设备（不覆盖已有的自定义设备）
-        final existingIds = _devices.map((d) => d.id).toSet();
-        final newDevices = devices.where((d) => !existingIds.contains(d.id)).toList();
-        if (newDevices.isNotEmpty) {
-          setState(() {
-            _devices = [..._devices, ...newDevices];
-          });
-          await storageService.saveSmartDevices(_devices);
-        }
+      if (mounted) {
+        setState(() {
+          _devices = devices;
+          _isLoading = false;
+        });
       }
     } catch (_) {
-      // 远程加载失败不影响本地数据显示
+      // 远程加载失败时显示默认推荐设备
+      if (mounted) {
+        setState(() {
+          _devices = _defaultDevices;
+          _isLoading = false;
+        });
+      }
     }
   }
+
+  /// 首页默认推荐设备
+  List<SmartDevice> get _defaultDevices => [
+    SmartDevice(
+      id: 'rec_ups_001',
+      name: 'Marsriva UPS 3K',
+      type: DeviceType.ups,
+      model: 'Marsriva UPS 3K',
+      ratedPower: '3kVA',
+      isOnline: true,
+      mode: DeviceMode.online,
+      lastSeen: DateTime.now(),
+      parameters: {'battery': 86.5, 'load': 45.8},
+    ),
+    SmartDevice(
+      id: 'rec_bms_001',
+      name: 'Marsriva BMS 100',
+      type: DeviceType.bms,
+      model: 'Marsriva BMS 100',
+      ratedPower: '5kW',
+      isOnline: true,
+      mode: DeviceMode.online,
+      lastSeen: DateTime.now(),
+      parameters: {'voltage': 48.2, 'soc': 78.0},
+    ),
+    SmartDevice(
+      id: 'rec_solar_001',
+      name: 'Marsriva Solar 10K',
+      type: DeviceType.solar,
+      model: 'Marsriva Solar 10K',
+      ratedPower: '10kW',
+      isOnline: true,
+      mode: DeviceMode.online,
+      lastSeen: DateTime.now(),
+      parameters: {'generation': 45.2, 'efficiency': 18.2},
+    ),
+    SmartDevice(
+      id: 'rec_storage_001',
+      name: 'Marsriva ESS 5K',
+      type: DeviceType.energyStorage,
+      model: 'Marsriva ESS 5K',
+      ratedPower: '5kW',
+      isOnline: false,
+      mode: DeviceMode.offline,
+      lastSeen: DateTime.now().subtract(const Duration(hours: 1)),
+      parameters: {'soc': 55.0},
+    ),
+  ];
 
   List<SmartDevice> get _filteredDevices {
     if (_searchQuery.isEmpty) return _devices;
@@ -461,17 +501,15 @@ class _DeviceGridScreenState extends State<DeviceGridScreen> {
                   lastSeen: DateTime.now(),
                 );
 
-                setState(() {
-                  _devices.add(newDevice);
-                });
-
-                // 持久化保存到本地存储
+                // 持久化保存用户设备到本地存储（追加，不影响首页展示）
                 final storageService = context.read<StorageService>();
-                await storageService.saveSmartDevices(_devices);
+                final existingDevices = await storageService.loadSmartDevices();
+                existingDevices.add(newDevice);
+                await storageService.saveSmartDevices(existingDevices);
 
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('${newDevice.name} 添加成功')),
+                    SnackBar(content: Text('${newDevice.name} 添加成功，请在"我的"页面查看')),
                   );
                 }
               },

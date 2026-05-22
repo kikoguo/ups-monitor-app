@@ -278,7 +278,10 @@ class _HomeScreenState extends State<HomeScreen> {
               devices: devices,
             ),
           ),
-        );
+        ).then((_) {
+          // 从设备列表页返回时刷新数据
+          _loadDevices();
+        });
       },
       borderRadius: BorderRadius.circular(16),
       child: Container(
