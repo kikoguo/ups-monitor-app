@@ -35,6 +35,8 @@ class RemoteService {
 
       if (response.statusCode == 200) {
         final json = Map<String, dynamic>.from(jsonDecode(response.body) as Map);
+        if (json['success'] == true && json['data'] != null) {
+          final devices = (json['data'] as List<dynamic>)
               .map((d) => SmartDevice.fromJson(Map<String, dynamic>.from(d as Map)))
               .toList();
           return devices;
