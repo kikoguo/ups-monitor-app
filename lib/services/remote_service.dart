@@ -34,10 +34,8 @@ class RemoteService {
           .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
-        final json = jsonDecode(response.body) as Map<String, dynamic>;
-        if (json['success'] == true && json['data'] != null) {
-          final devices = (json['data'] as List<dynamic>)
-              .map((d) => SmartDevice.fromJson(d as Map<String, dynamic>))
+        final json = Map<String, dynamic>.from(jsonDecode(response.body) as Map);
+              .map((d) => SmartDevice.fromJson(Map<String, dynamic>.from(d as Map)))
               .toList();
           return devices;
         }
@@ -68,7 +66,7 @@ class RemoteService {
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         if (json['success'] == true && json['data'] != null) {
-          return SmartDevice.fromJson(json['data'] as Map<String, dynamic>);
+          return SmartDevice.fromJson(Map<String, dynamic>.from(json['data'] as Map));
         }
       }
       return null;
@@ -100,10 +98,10 @@ class RemoteService {
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         if (json['success'] == true && json['data'] != null) {
-          return json['data'] as Map<String, dynamic>;
+          return Map<String, dynamic>.from(json['data'] as Map);
         }
       }
-      return {};
+      return <String, dynamic>{};
     } catch (e) {
       // 演示模式：返回模拟数据
       return _generateDemoRealtimeData(deviceId);
@@ -168,11 +166,11 @@ class RemoteService {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         if (json['success'] == true && json['data'] != null) {
           return (json['data'] as List<dynamic>)
-              .map((d) => d as Map<String, dynamic>)
+              .map((d) => Map<String, dynamic>.from(d as Map))
               .toList();
         }
       }
-      return [];
+      return <Map<String, dynamic>>[];
     } catch (e) {
       // 演示模式：生成模拟历史数据
       return _generateDemoHistoryData(parameter, startTime, endTime);
@@ -370,7 +368,7 @@ class RemoteService {
     params.forEach((key, value) {
       if (value is num) {
         final variation = value * 0.05 * (random.nextDouble() - 0.5);
-        params[key] = (value + variation).toStringAsFixed(1);
+        params[key] = double.parse((value + variation).toStringAsFixed(1));
       }
     });
 

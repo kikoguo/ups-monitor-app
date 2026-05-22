@@ -63,7 +63,7 @@ class UPSStatus extends Equatable {
       temperature: (json['temperature'] as num?)?.toDouble() ?? 0.0,
       runtimeRemaining: (json['runtime_remaining'] as num?)?.toInt() ?? 0,
       timestamp: json['timestamp'] != null
-          ? DateTime.fromMillisecondsSinceEpoch((json['timestamp'] as int) * 1000)
+          ? DateTime.fromMillisecondsSinceEpoch((json['timestamp'] as num).toInt() * 1000)
           : DateTime.now(),
     );
   }

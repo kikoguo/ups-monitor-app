@@ -62,8 +62,8 @@ class SmartDevice extends Equatable {
     this.isOnline = false,
     this.mode = DeviceMode.offline,
     required this.lastSeen,
-    this.parameters = const {},
-    this.alarms = const [],
+    this.parameters = const <String, dynamic>{},
+    this.alarms = const <DeviceAlarm>[],
   });
 
   factory SmartDevice.fromJson(Map<String, dynamic> json) {
@@ -81,13 +81,15 @@ class SmartDevice extends Equatable {
       isOnline: json['is_online'] as bool? ?? false,
       mode: DeviceMode.fromCode(json['mode'] as String? ?? 'offline'),
       lastSeen: json['last_seen'] != null
-          ? DateTime.parse(json['last_seen'] as String)
+          ? (json['last_seen'] is String
+              ? DateTime.parse(json['last_seen'] as String)
+              : DateTime.fromMillisecondsSinceEpoch((json['last_seen'] as num).toInt()))
           : DateTime.now(),
-      parameters: (json['parameters'] as Map<String, dynamic>?) ?? {},
+      parameters: (json['parameters'] as Map<String, dynamic>?) ?? <String, dynamic>{},
       alarms: (json['alarms'] as List<dynamic>?)
-              ?.map((a) => DeviceAlarm.fromJson(a as Map<String, dynamic>))
+              ?.map((a) => DeviceAlarm.fromJson(Map<String, dynamic>.from(a as Map)))
               .toList() ??
-          [],
+          <DeviceAlarm>[],
     );
   }
 
@@ -205,7 +207,9 @@ class DeviceAlarm extends Equatable {
       message: json['message'] as String? ?? '',
       level: AlarmLevel.fromCode(json['level'] as String? ?? 'info'),
       timestamp: json['timestamp'] != null
-          ? DateTime.parse(json['timestamp'] as String)
+          ? (json['timestamp'] is String
+              ? DateTime.parse(json['timestamp'] as String)
+              : DateTime.fromMillisecondsSinceEpoch((json['timestamp'] as num).toInt()))
           : DateTime.now(),
       isResolved: json['is_resolved'] as bool? ?? false,
     );

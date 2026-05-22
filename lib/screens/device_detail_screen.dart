@@ -18,7 +18,7 @@ enum ConnectionType { wifi, bluetooth }
 class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
   final RemoteService _remoteService = RemoteService();
   late SmartDevice _device;
-  Map<String, dynamic> _realtimeData = {};
+  Map<String, dynamic> _realtimeData = <String, dynamic>{};
   bool _isLoading = true;
   bool _isConnecting = false;
   String? _connectionError;
@@ -29,7 +29,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
     super.initState();
     _device = widget.device;
     if (_device.parameters == null) {
-      _device = _device.copyWith(parameters: {});
+      _device = _device.copyWith(parameters: <String, dynamic>{});
     }
     _isLoading = false;
   }
@@ -47,11 +47,7 @@ class _DeviceDetailScreenState extends State<DeviceDetailScreen> {
     if (mounted) {
       setState(() {
         _isConnecting = false;
-        _device = SmartDevice(
-          id: _device.id,
-          name: _device.name,
-          type: _device.type,
-          localIp: _device.localIp,
+        _device = _device.copyWith(
           isOnline: true,
           lastSeen: DateTime.now(),
         );

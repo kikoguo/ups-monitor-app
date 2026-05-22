@@ -27,7 +27,7 @@ class NetworkService {
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         if (json['success'] == true && json['data'] != null) {
-          return UPSStatus.fromJson(json['data'] as Map<String, dynamic>);
+          return UPSStatus.fromJson(Map<String, dynamic>.from(json['data'] as Map));
         }
       }
       
@@ -51,7 +51,7 @@ class NetworkService {
         final json = jsonDecode(response.body) as Map<String, dynamic>;
         if (json['success'] == true && json['data'] != null) {
           return DeviceInfo.fromApiResponse(
-            json['data'] as Map<String, dynamic>,
+            Map<String, dynamic>.from(json['data'] as Map),
             ipAddress,
           );
         }

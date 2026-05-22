@@ -36,7 +36,7 @@ class StorageService {
     try {
       final jsonList = jsonDecode(jsonString) as List<dynamic>;
       return jsonList
-          .map((json) => DeviceInfo.fromJson(json as Map<String, dynamic>))
+          .map((json) => DeviceInfo.fromJson(Map<String, dynamic>.from(json as Map)))
           .toList();
     } catch (e) {
       return [];
@@ -88,7 +88,7 @@ class StorageService {
     if (jsonString == null) return _defaultSettings;
 
     try {
-      return jsonDecode(jsonString) as Map<String, dynamic>;
+      return Map<String, dynamic>.from(jsonDecode(jsonString) as Map);
     } catch (e) {
       return _defaultSettings;
     }
@@ -97,7 +97,12 @@ class StorageService {
   /// 获取设置项
   Future<T?> getSetting<T>(String key) async {
     final settings = await loadSettings();
-    return settings[key] as T?;
+    final value = settings[key];
+    if (value is T) return value;
+    // Handle num <-> int/double conversions for Web (Dart2JS)
+    if (T == int && value is num) return value.toInt() as T?;
+    if (T == double && value is num) return value.toDouble() as T?;
+    return null;
   }
 
   /// 设置设置项
@@ -127,7 +132,7 @@ class StorageService {
     try {
       final jsonList = jsonDecode(jsonString) as List<dynamic>;
       return jsonList
-          .map((json) => UPSStatus.fromJson(json as Map<String, dynamic>))
+          .map((json) => UPSStatus.fromJson(Map<String, dynamic>.from(json as Map)))
           .toList();
     } catch (e) {
       return [];

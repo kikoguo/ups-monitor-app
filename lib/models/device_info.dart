@@ -47,7 +47,9 @@ class DeviceInfo extends Equatable {
       firmware: json['firmware'] as String? ?? json['firmware_version'] as String? ?? 'Unknown',
       esp8266Version: json['esp8266_version'] as String? ?? 'Unknown',
       lastSeen: json['last_seen'] != null
-          ? DateTime.parse(json['last_seen'] as String)
+          ? (json['last_seen'] is String
+              ? DateTime.parse(json['last_seen'] as String)
+              : DateTime.fromMillisecondsSinceEpoch((json['last_seen'] as num).toInt()))
           : DateTime.now(),
       isOnline: json['is_online'] as bool? ?? true,
     );
